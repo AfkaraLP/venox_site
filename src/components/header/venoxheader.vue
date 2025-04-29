@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="mx-auto bg-red-50">hey there</p>
+    <p class="font-genshin mx-auto bg-pink-prim">yo there</p>
   </div>
 </template>
 
