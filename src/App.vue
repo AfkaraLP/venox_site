@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import VenoxHeader from "./components/header/venoxheader.vue"
+import DisplayVideo from "./components/main/youtube/displayvideo.vue"
+
+</script>
+
+<script lang="ts">
 </script>
 
 <template>
@@ -8,6 +13,7 @@ import VenoxHeader from "./components/header/venoxheader.vue"
   </header>
 
   <main>
+    <DisplayVideo />
   </main>
 
   <footer>

@@ -15,10 +15,14 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@googleapis/youtube": "^25.0.0",
     "@tailwindcss/postcss": "^4.1.4",
     "postcss": "^8.5.3",
     "postcss-loader": "^8.1.1",
+    "save-dev": "^0.0.1-security",
+    "scrape-youtube": "^2.4.0",
     "tailwindcss": "^4.1.4",
+    "ts-node": "^10.9.2",
     "vue": "^3.5.13"
   },
   "devDependencies": {
@@ -30,7 +34,7 @@
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.25.1",
     "eslint-plugin-oxlint": "^0.16.8",
-    "eslint-plugin-vue": "~10.0.0",
+    "eslint-plugin-vue": "~10.0.1",
     "jiti": "^2.4.2",
     "npm-run-all2": "^7.0.2",
     "oxlint": "^0.16.8",
