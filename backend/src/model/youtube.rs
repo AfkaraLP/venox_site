@@ -1,6 +1,10 @@
+use anyhow::{Result, anyhow};
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize)]
+const RSS_URL: &str = "https://www.youtube.com/feeds/videos.xml?channel_id=";
+
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename = "feed")]
 pub struct Feed {
     pub id: String,
@@ -14,14 +18,14 @@ pub struct Feed {
     pub entry: Vec<Entry>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Author {
     pub name: String,
     pub uri: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Entry {
     pub id: String,
@@ -35,17 +39,30 @@ pub struct Entry {
     pub media_group: MediaGroup,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaGroup {
     #[serde(rename = "thumbnail", alias = "media:thumbnail")]
     pub media_thumbnail: MediaThumbnail,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaThumbnail {
     pub url: String,
     pub width: Option<u32>,
     pub height: Option<u32>,
+}
+
+impl Feed {
+    pub async fn get_content_from_id(id: String, client: &Client) -> Result<Feed> {
+        let response = client
+            .get(format!("{RSS_URL}{id}"))
+            .send()
+            .await?
+            .text()
+            .await?;
+
+        serde_xml_rs::from_str(&response).map_err(|_| anyhow!("serde xml issue"))
+    }
 }
