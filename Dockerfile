@@ -11,6 +11,15 @@ COPY . .
 # Build backend (Rust)
 WORKDIR /workspace/backend
 RUN nix develop .# --command cargo build --release
+# Debug: List the build output
+RUN ls -lh /workspace/backend/target/release/ && \
+    if [ ! -f /workspace/backend/target/release/backend ]; then \
+      echo 'ERROR: backend binary not found!'; \
+      exit 1; \
+    fi && \
+    chmod +x /workspace/backend/target/release/backend
+# Prevent builder image removal for debugging
+RUN true
 
 # Stage 2: Minimal runtime image
 FROM debian:bookworm-slim

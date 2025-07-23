@@ -12,21 +12,13 @@ This project is a full-stack web application with:
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/)
 - [Nix](https://nixos.org/download.html) (for local development/builds, optional for Docker usage)
-- [Bun](https://bun.sh/) (for local frontend builds, optional for Docker usage)
+- [Bun](https://bun.sh/) (for local frontend development, optional for Docker usage)
 
 ---
 
 ## Quick Start (Docker Compose)
 
-### 1. Build the Frontend Locally (Required for Docker Compose)
-This ensures the `dist/` directory exists for the frontend container:
-
-```sh
-nix develop .# --command bun install
-nix develop .# --command bun run build
-```
-
-### 2. Start the Full Stack App
+Simply run:
 
 ```sh
 docker-compose up --build
@@ -44,7 +36,7 @@ You can now reverse proxy the frontend (port 3000) and backend (port 9999) using
 - `src/` - Frontend source code (Vue)
 - `backend/` - Rust backend source code
 - `Dockerfile` - Backend build and runtime image
-- `frontend.Dockerfile` - Nginx static file server for frontend
+- `frontend.Dockerfile` - Nginx static file server for frontend (now builds the frontend inside the container)
 - `docker-compose.yml` - Orchestrates both containers
 
 ---
@@ -67,7 +59,7 @@ You can now reverse proxy the frontend (port 3000) and backend (port 9999) using
 ---
 
 ## Notes
-- The frontend is served by Nginx in the `frontend` container on port 3000.
+- The frontend is built and served by Nginx in the `frontend` container on port 3000.
 - The backend API is served by the Rust binary in the `backend` container on port 9999.
 - You can reverse proxy these services with Caddy, Nginx, or another proxy.
 - All builds are reproducible via Nix flakes.
