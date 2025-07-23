@@ -1,6 +1,5 @@
-use actix_web::error::HttpError;
+use actix_web::HttpServer;
 use actix_web::{App, HttpResponse, get, http::header::ContentType};
-use actix_web::{HttpServer, ResponseError};
 use model::soundcloud::SoundcloudFeed;
 use model::youtube::YoutubeFeed;
 use reqwest::Client;
@@ -20,7 +19,6 @@ const VENOX_SOUNDCLOUD_ID: &str = "001310885850";
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     println!("Listening on port {PORT}");
-    let client: Client = Client::new();
     HttpServer::new(|| App::new().service(venox_accounts).service(soundcloud_data))
         .bind(("0.0.0.0", PORT))?
         .run()

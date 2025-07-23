@@ -18,6 +18,8 @@ RUN ls -lh /workspace/backend/target/release/ && \
       exit 1; \
     fi && \
     chmod +x /workspace/backend/target/release/backend
+# Check dynamic library dependencies
+RUN ldd /workspace/backend/target/release/backend || echo "ldd not available"
 # Prevent builder image removal for debugging
 RUN true
 
