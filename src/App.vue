@@ -76,7 +76,9 @@ onMounted(async () => {
     <div v-if="featuredVideoError" class="error" style="text-align:center; color:#b00; margin:2rem 0;">
       {{ featuredVideoError }}
     </div>
-    <VideoGrid />
+    <div id="videos">
+      <VideoGrid />
+    </div>
     <!-- <ArtGallery /> -->
     <div id="music">
       <MusicSection />

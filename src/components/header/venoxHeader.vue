@@ -1,17 +1,17 @@
 <template>
-  <header class="venox-header">
-    <div class="logo-container">
+  <header class="venox-header-mc">
+    <div class="logo-container-mc">
       <a href="/">
         <span class="sr-only">Venox Home</span>
-        <span class="logo-svg" v-html="logoSvg"></span>
+        <span class="logo-svg-mc" v-html="logoSvg"></span>
       </a>
-      <span class="site-title">LilVenox</span>
+      <span class="site-title-mc">LILVENOX</span>
     </div>
-    <nav class="main-nav">
-      <a href="#music" class="nav-link">Music</a>
-      <a href="#videos" class="nav-link">Videos</a>
-      <a href="#art" class="nav-link">Art</a>
-      <a href="#footer" class="nav-link">Contact</a>
+    <nav class="main-nav-mc">
+      <a href="#music" class="nav-link-mc">Music</a>
+      <a href="#videos" class="nav-link-mc">Videos</a>
+      <a href="#art" class="nav-link-mc">Art</a>
+      <a href="#footer" class="nav-link-mc">Contact</a>
     </nav>
   </header>
 </template>
@@ -21,52 +21,70 @@ const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 261.76 226
 </script>
 
 <style scoped>
-.venox-header {
+.venox-header-mc {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem 2.5rem 1.2rem 2.5rem;
-  background: #fff;
-  box-shadow: 0 2px 16px #b5aaff11;
-  border-radius: 0 0 2rem 2rem;
+  background: url('/src/assets/images/minecraft_grass.png') repeat, #6aac4b;
+  border-bottom: 6px double #222;
+  border-top: 6px double #222;
+  box-shadow: 0 8px 0 #4e2e13;
+  border-radius: 0;
   position: sticky;
   top: 0;
   z-index: 10;
+  image-rendering: pixelated;
 }
-.logo-container {
+.logo-container-mc {
   display: flex;
   align-items: center;
   gap: 1.1rem;
 }
-.logo-svg {
+.logo-svg-mc {
   display: inline-block;
   vertical-align: middle;
   width: 38px;
   height: 38px;
+  image-rendering: pixelated;
 }
-.site-title {
-  font-family: 'genshin', 'Segoe UI', Arial, sans-serif;
-  font-size: 2rem;
-  color: #5a4fcf;
+.site-title-mc {
+  font-family: var(--font-mc);
+  font-size: 2.2rem;
+  color: #222;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #fff, 4px 4px 0 #4e2e13;
+  outline: 2px solid #fff8;
+  outline-offset: 2px;
+  filter: drop-shadow(0 0 2px #fff8);
 }
-.main-nav {
+.main-nav-mc {
   display: flex;
   gap: 2.2rem;
 }
-.nav-link {
-  color: #7b6ee6;
+.nav-link-mc {
+  font-family: var(--font-mc);
+  color: #fff;
+  background: #4e2e13;
   font-size: 1.15rem;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-  padding: 0.3rem 0.7rem;
-  border-radius: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 4px double #222;
+  border-radius: 0;
+  padding: 0.3rem 1.1rem;
+  box-shadow: 0 4px 0 #222;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  letter-spacing: 1px;
+  image-rendering: pixelated;
 }
-.nav-link:hover {
-  color: #5a4fcf;
-  background: #e0c3fc44;
+.nav-link-mc:hover {
+  background: #6aac4b;
+  color: #222;
+  transform: scale(1.07) rotate(-2deg);
+  box-shadow: 0 8px 0 #4e2e13;
 }
 .sr-only {
   position: absolute;
@@ -79,17 +97,16 @@ const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 261.76 226
   border: 0;
 }
 @media (max-width: 900px) {
-  .venox-header {
+  .venox-header-mc {
     flex-direction: column;
     align-items: flex-start;
     padding: 1rem 1.2rem;
-    border-radius: 0 0 1.2rem 1.2rem;
   }
-  .main-nav {
+  .main-nav-mc {
     gap: 1.1rem;
     margin-top: 0.7rem;
   }
-  .site-title {
+  .site-title-mc {
     font-size: 1.3rem;
   }
 }

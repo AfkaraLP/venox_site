@@ -5,6 +5,73 @@ use crate::model::youtube::YoutubeFeed;
 use anyhow::Result;
 use rusqlite::{Connection, params};
 
+pub fn initialize_youtube_db(connection: &Connection, feed: &YoutubeFeed) -> Result<()> {
+    let sql: &str = "
+        -- Main feed table
+        CREATE TABLE youtube_feed (
+            id TEXT PRIMARY KEY,
+            yt_channel_id TEXT NOT NULL,
+            title TEXT NOT NULL,
+            published TEXT NOT NULL
+        );
+
+        -- Entries table, linked to youtube_feed
+        CREATE TABLE youtube_entry (
+            id TEXT PRIMARY KEY,
+            feed_id TEXT NOT NULL,
+            title TEXT NOT NULL,
+            author_name TEXT NOT NULL,
+            author_uri TEXT NOT NULL,
+            published TEXT NOT NULL,
+            updated TEXT NOT NULL,
+            thumbnail_url TEXT NOT NULL,
+            thumbnail_width INTEGER,
+            thumbnail_height INTEGER,
+            FOREIGN KEY(feed_id) REFERENCES youtube_feed(id) ON DELETE CASCADE
+        );
+    ";
+
+    connection.execute_batch(sql)?;
+
+    insert_youtube_feed(connection, feed)
+}
+
+pub fn insert_youtube_feed(connection: &Connection, feed: &YoutubeFeed) -> Result<()> {
+    // Insert into youtube_feed
+    connection.execute(
+        "INSERT OR REPLACE INTO youtube_feed (id, yt_channel_id, title, published)
+         VALUES (?1, ?2, ?3, ?4)",
+        params![feed.id, feed.yt_channel_id, feed.title, feed.published],
+    )?;
+
+    // Insert each entry
+    for entry in &feed.entry {
+        connection.execute(
+            "INSERT OR REPLACE INTO youtube_entry (
+                id, feed_id, title,
+                author_name, author_uri,
+                published, updated,
+                thumbnail_url, thumbnail_width, thumbnail_height
+             )
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+            params![
+                entry.id,
+                feed.id,
+                entry.title,
+                entry.author.name,
+                entry.author.uri,
+                entry.published,
+                entry.updated,
+                entry.media_group.media_thumbnail.url,
+                entry.media_group.media_thumbnail.width,
+                entry.media_group.media_thumbnail.height,
+            ],
+        )?;
+    }
+
+    Ok(())
+}
+
 pub fn initialize_soundcloud_db(connection: &Connection, feed: &SoundcloudFeed) -> Result<()> {
     let sql: &str = "
         -- Table for the feed's channel
@@ -52,10 +119,12 @@ pub fn insert_soundcloud_feed(connection: &Connection, feed: &SoundcloudFeed) ->
     let channel_id = connection.last_insert_rowid();
 
     for image in &feed.channel.profile_pictures {
-        connection.execute(
-            "INSERT INTO channel_images (channel_id, url) VALUES (?1, ?2)",
-            params![channel_id, image.url],
-        )?;
+        if let Some(url) = &image.url {
+            connection.execute(
+                "INSERT INTO channel_images (channel_id, url) VALUES (?1, ?2)",
+                params![channel_id, url],
+            )?;
+        }
     }
 
     for song in &feed.channel.item {
@@ -188,5 +257,75 @@ mod tests {
             )
             .unwrap();
         assert_eq!(img_count, 1);
+    }
+
+    fn setup_schema(conn: &Connection) {
+        conn.execute_batch(
+            "
+            CREATE TABLE youtube_feed (
+                id TEXT PRIMARY KEY,
+                yt_channel_id TEXT NOT NULL,
+                title TEXT NOT NULL,
+                published TEXT NOT NULL
+            );
+            
+            CREATE TABLE youtube_entry (
+                id TEXT PRIMARY KEY,
+                feed_id TEXT NOT NULL,
+                title TEXT NOT NULL,
+                author_name TEXT NOT NULL,
+                author_uri TEXT NOT NULL,
+                published TEXT NOT NULL,
+                updated TEXT NOT NULL,
+                thumbnail_url TEXT NOT NULL,
+                thumbnail_width INTEGER,
+                thumbnail_height INTEGER,
+                FOREIGN KEY(feed_id) REFERENCES youtube_feed(id) ON DELETE CASCADE
+            );
+            ",
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn test_insert_youtube_feed() {
+        let conn = Connection::open_in_memory().unwrap();
+        setup_schema(&conn);
+
+        let feed = YoutubeFeed {
+            id: "feed1".to_string(),
+            yt_channel_id: "channel123".to_string(),
+            title: "Sample Feed".to_string(),
+            published: "2025-01-01T00:00:00Z".to_string(),
+            entry: vec![youtube::Entry {
+                id: "entry1".to_string(),
+                title: "First Video".to_string(),
+                author: youtube::Author {
+                    name: "Uploader".to_string(),
+                    uri: "https://youtube.com/uploader".to_string(),
+                },
+                published: "2025-01-01T01:00:00Z".to_string(),
+                updated: "2025-01-01T02:00:00Z".to_string(),
+                media_group: youtube::MediaGroup {
+                    media_thumbnail: youtube::MediaThumbnail {
+                        url: "https://img.youtube.com/vi/xyz/default.jpg".to_string(),
+                        width: Some(120),
+                        height: Some(90),
+                    },
+                },
+            }],
+        };
+
+        insert_youtube_feed(&conn, &feed).unwrap();
+
+        // Check feed was inserted
+        let mut stmt = conn.prepare("SELECT COUNT(*) FROM youtube_feed").unwrap();
+        let count: i64 = stmt.query_row([], |row| row.get(0)).unwrap();
+        assert_eq!(count, 1);
+
+        // Check entry was inserted
+        let mut stmt = conn.prepare("SELECT COUNT(*) FROM youtube_entry").unwrap();
+        let count: i64 = stmt.query_row([], |row| row.get(0)).unwrap();
+        assert_eq!(count, 1);
     }
 }

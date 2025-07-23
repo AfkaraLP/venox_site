@@ -161,9 +161,13 @@ onBeforeUnmount(() => {
   margin: 2rem 0 3rem 0;
 }
 .music-section h2 {
-  color: #5a4fcf;
+  color: #4e2e13;
   margin-bottom: 1.5rem;
   text-align: left;
+  font-family: var(--font-mc);
+  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
+  letter-spacing: 1px;
+  font-size: 2rem;
 }
 .music-list {
   display: flex;
@@ -172,16 +176,19 @@ onBeforeUnmount(() => {
   align-items: stretch;
   overflow-x: auto;
   padding-bottom: 1rem;
-  width: 100vw;
-  min-width: 100vw;
-  border: 2px dashed #b5aaff44;
+  width: 100%;
+  min-width: 0;
+  border: 4px dashed #4e2e13;
   scroll-behavior: smooth;
+  background: #bcbcbc;
+  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
 }
 .music-track {
-  background: #fff;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 24px #b5aaff22;
-  padding: 3rem 3.5rem 3.5rem 3.5rem;
+  background: #e3e3e3cc;
+  border-radius: 0;
+  border: 6px double #222;
+  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
+  padding: 2rem 2.5rem 2.5rem 2.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -195,30 +202,38 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden;
   flex: 0 0 420px;
+  font-family: var(--font-mc);
+  image-rendering: pixelated;
 }
 .music-track:hover {
-  box-shadow: 0 8px 32px #b5aaff33;
+  box-shadow: 0 12px 0 #4e2e13, 0 16px 0 #bcbcbc;
   transform: translateY(-2px) scale(1.01);
 }
 .audio-unavailable {
   color: #aaa;
   font-size: 0.95em;
   margin-right: 1rem;
+  font-family: var(--font-mc);
 }
 .track-link {
-  color: #5a4fcf;
+  color: #fff;
   text-decoration: none;
   font-size: 1.18rem;
   margin-left: auto;
   transition: color 0.2s;
   padding: 0.7rem 1.5rem;
-  border-radius: 1rem;
-  background: #f3eaff;
-  box-shadow: 0 1px 4px #b5aaff11;
+  border-radius: 0;
+  background: #4e2e13;
+  box-shadow: 0 4px 0 #222;
+  border: 4px double #222;
+  font-family: var(--font-mc);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  image-rendering: pixelated;
 }
 .track-link:hover {
-  color: #7b6ee6;
-  background: #e0c3fc;
+  color: #222;
+  background: #6aac4b;
   text-decoration: underline;
 }
 .track-header {
@@ -226,17 +241,22 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2.2rem;
-  background: rgba(255,255,255,0.82);
-  border-radius: 1.2rem;
+  background: #bcbcbc;
+  border-radius: 0;
   padding: 0.7rem 1.2rem 0.7rem 1.2rem;
-  box-shadow: 0 2px 8px #b5aaff11;
+  box-shadow: 0 2px 0 #4e2e13;
+  border: 4px dashed #222;
+  font-family: var(--font-mc);
 }
 .track-title {
-  color: #3a2e8c;
+  color: #4e2e13;
   font-weight: bold;
   font-size: 1.35em;
   margin-right: 0.5rem;
-  letter-spacing: 0.2px;
+  letter-spacing: 1px;
+  font-family: var(--font-mc);
+  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
+  text-transform: uppercase;
 }
 .track-player {
   width: 100%;
@@ -247,41 +267,42 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   padding: 0 2.5rem 1.2rem 2.5rem;
-  background: linear-gradient(0deg, #e0c3fcbb 60%, transparent 100%);
-  border-radius: 0 0 1.5rem 1.5rem;
+  background: #bcbcbc;
+  border-radius: 0;
   box-sizing: border-box;
+  border-top: 4px dashed #222;
 }
 .skeleton-title {
   width: 60%;
   height: 1.5rem;
-  border-radius: 0.7rem;
-  background: linear-gradient(90deg, #e0c3fc33 25%, #b5aaff44 50%, #e0c3fc33 75%);
-  background-size: 200% 100%;
+  border-radius: 0;
+  background: #bcbcbc;
+  border: 4px dashed #222;
   animation: skeleton-loading 1.2s infinite linear;
   margin-bottom: 0.5rem;
 }
 .skeleton-link {
   width: 80px;
   height: 1.1rem;
-  border-radius: 0.7rem;
-  background: linear-gradient(90deg, #e0c3fc22 25%, #b5aaff33 50%, #e0c3fc22 75%);
-  background-size: 200% 100%;
+  border-radius: 0;
+  background: #bcbcbc;
+  border: 4px dashed #222;
   animation: skeleton-loading 1.2s infinite linear;
 }
 .skeleton-audio {
   width: 100%;
   height: 2.2rem;
-  border-radius: 1.2rem;
-  background: linear-gradient(90deg, #e0c3fc33 25%, #b5aaff44 50%, #e0c3fc33 75%);
-  background-size: 200% 100%;
+  border-radius: 0;
+  background: #bcbcbc;
+  border: 4px dashed #222;
   animation: skeleton-loading 1.2s infinite linear;
 }
 @keyframes skeleton-loading {
   0% {
-    background-position: 200% 0;
+    opacity: 0.7;
   }
   100% {
-    background-position: -200% 0;
+    opacity: 1;
   }
 }
 @media (max-width: 700px) {

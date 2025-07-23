@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import PlayButton from './PlayButton.vue'
 
 interface VideoEntry {
   id: string
@@ -11,6 +12,8 @@ interface VideoEntry {
 interface ChannelFeed {
   title: string
   link?: string
+  channelId?: string
+  id?: string
   author?: { name: string, uri: string }
   description?: string
   entry: VideoEntry[]
@@ -91,6 +94,8 @@ onMounted(async () => {
       title: feed.title,
       link: feed.link || feed.author?.uri,
       author: feed.author,
+      channelId: feed.channelId,
+      id: feed.id,
       description: feed.subtitle || feed.description,
       entry: Array.isArray(feed.entry) ? feed.entry : []
     }))
@@ -131,7 +136,7 @@ onBeforeUnmount(() => {
       <div v-for="(feed, channelIdx) in feeds" :key="feed.title" class="channel-section">
         <div class="channel-header">
           <h3 class="channel-title">
-            <a v-if="feed.link" :href="feed.link" target="_blank" rel="noopener noreferrer">{{ feed.title }}</a>
+            <a v-if="feed.channelId" :href="'https://www.youtube.com/channel/UC' + feed.channelId" target="_blank" rel="noopener noreferrer">{{ feed.title }}</a>
             <span v-else>{{ feed.title }}</span>
           </h3>
           <div v-if="feed.description" class="channel-desc">{{ feed.description }}</div>
@@ -146,7 +151,7 @@ onBeforeUnmount(() => {
             <div class="video-embed">
               <template v-if="playingIndexes[channelIdx] !== idx">
                 <img :src="getThumbnailUrl(video.id)" :alt="video.title" />
-                <button class="play-btn" @click="playVideo(channelIdx, idx)">▶</button>
+                <PlayButton :size="54" color="#fff" bgColor="#6aac4b" @click="playVideo(channelIdx, idx)" />
               </template>
               <template v-else>
                 <iframe
@@ -172,37 +177,45 @@ onBeforeUnmount(() => {
   margin: 2rem 0;
 }
 .video-grid h2 {
-  color: #5a4fcf;
+  color: #4e2e13;
   margin-bottom: 1rem;
   text-align: left;
+  font-family: var(--font-mc);
+  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
+  letter-spacing: 1px;
+  font-size: 2rem;
 }
 .channel-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #e0c3fc44;
+  border-bottom: 4px dashed #4e2e13;
 }
 .channel-header {
   margin-bottom: 1.2rem;
 }
 .channel-title {
   font-size: 1.35rem;
-  color: #3a2e8c;
+  color: #4e2e13;
   font-weight: bold;
   margin-bottom: 0.3rem;
+  font-family: var(--font-mc);
+  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
+  text-transform: uppercase;
 }
 .channel-title a {
-  color: #3a2e8c;
+  color: #4e2e13;
   text-decoration: none;
   transition: color 0.2s;
 }
 .channel-title a:hover {
-  color: #5a4fcf;
+  color: #6aac4b;
   text-decoration: underline;
 }
 .channel-desc {
-  color: #7b6ee6;
+  color: #4e2e13;
   font-size: 1.05rem;
   margin-bottom: 0.2rem;
+  font-family: var(--font-mc);
 }
 .side-scroll-grid {
   display: flex;
@@ -214,55 +227,62 @@ onBeforeUnmount(() => {
   max-width: 100vw;
   min-width: 0;
   scrollbar-width: thin;
-  scrollbar-color: #b5aaff44 #f3eaff;
+  scrollbar-color: #bcbcbc #e3e3e3;
+  background: #bcbcbc;
+  border: 4px dashed #222;
+  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
 }
 .side-scroll-grid:hover {
-  scrollbar-color: #7b6ee6 #e0c3fc;
+  scrollbar-color: #6aac4b #bcbcbc;
 }
 .side-scroll-grid::-webkit-scrollbar {
   height: 12px;
 }
 .side-scroll-grid::-webkit-scrollbar-thumb {
-  background: #b5aaff44;
-  border-radius: 6px;
+  background: #bcbcbc;
+  border-radius: 0;
 }
 .side-scroll-grid:hover::-webkit-scrollbar-thumb {
-  background: #7b6ee6;
+  background: #6aac4b;
 }
 .side-scroll-grid::-webkit-scrollbar-track {
-  background: #f3eaff;
-  border-radius: 6px;
+  background: #e3e3e3;
+  border-radius: 0;
 }
 .video-card {
-  background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 2px 12px #b5aaff22;
+  background: #e3e3e3cc;
+  border-radius: 0;
+  border: 6px double #222;
+  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
   overflow: hidden;
   width: 320px;
   max-width: 90vw;
   text-align: center;
   transition: transform 0.15s;
   flex: 0 0 320px;
+  font-family: var(--font-mc);
+  image-rendering: pixelated;
 }
 .video-card:hover {
   transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 0 #4e2e13, 0 16px 0 #bcbcbc;
 }
 .video-card img {
   width: 100%;
   display: block;
+  image-rendering: pixelated;
 }
 .video-embed {
   width: 100%;
   aspect-ratio: 16/9;
   margin-bottom: 0.5rem;
-  border-radius: 1rem;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 2px 12px #b5aaff22;
+  box-shadow: 0 4px 0 #4e2e13;
   position: relative;
   background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  border: 4px dashed #222;
 }
 .video-iframe {
   width: 100%;
@@ -277,60 +297,73 @@ onBeforeUnmount(() => {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background: #fff8;
-  border: none;
-  border-radius: 50%;
+  background: #6aac4b;
+  border: 4px double #222;
+  border-radius: 0;
   font-size: 2.2rem;
-  color: #7b6ee6;
+  color: #fff;
   width: 54px;
   height: 54px;
   cursor: pointer;
-  box-shadow: 0 2px 8px #b5aaff44;
+  box-shadow: 0 4px 0 #4e2e13;
   transition: background 0.2s;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
+  image-rendering: pixelated;
 }
 .play-btn:hover {
-  background: #fff;
+  background: #4e2e13;
+  color: #6aac4b;
 }
 .video-title {
   display: block;
   padding: 0.5rem 0;
-  color: #7b6ee6;
+  color: #4e2e13;
   font-weight: bold;
   text-decoration: none;
   transition: color 0.2s;
   text-align: center;
+  font-family: var(--font-mc);
+  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .video-title:hover {
-  color: #5a4fcf;
+  color: #6aac4b;
   text-decoration: underline;
 }
 .skeleton-thumb {
   width: 100%;
   aspect-ratio: 16/9;
-  border-radius: 1rem;
-  background: linear-gradient(90deg, #e0c3fc22 25%, #b5aaff33 50%, #e0c3fc22 75%);
-  background-size: 200% 100%;
+  border-radius: 0;
+  background: #bcbcbc;
+  border: 4px dashed #222;
   animation: skeleton-loading 1.2s infinite linear;
 }
 .skeleton-title {
   width: 70%;
   height: 1.3rem;
-  border-radius: 0.7rem;
+  border-radius: 0;
   margin: 0.7rem auto 0.5rem auto;
-  background: linear-gradient(90deg, #e0c3fc33 25%, #b5aaff44 50%, #e0c3fc33 75%);
-  background-size: 200% 100%;
+  background: #bcbcbc;
+  border: 4px dashed #222;
   animation: skeleton-loading 1.2s infinite linear;
 }
 @keyframes skeleton-loading {
   0% {
-    background-position: 200% 0;
+    opacity: 0.7;
   }
   100% {
-    background-position: -200% 0;
+    opacity: 1;
   }
+}
+.video-embed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  image-rendering: pixelated;
 }
 </style> 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import PlayButton from './PlayButton.vue'
 const props = defineProps<{
   video?: {
     id: string,
@@ -29,7 +30,7 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
       <div class="video-thumb">
         <template v-if="!playing">
           <img :src="props.video.thumbnail" :alt="props.video.title" />
-          <button class="play-btn" @click="playVideo">▶</button>
+          <PlayButton :size="80" color="#fff" bgColor="#6aac4b" @click="playVideo" />
         </template>
         <template v-else>
           <iframe
@@ -92,15 +93,14 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   box-shadow: 0 4px 32px #b5aaff33;
   margin-bottom: 1.2rem;
   background: #222; /* fallback */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
 .video-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  image-rendering: pixelated;
 }
 .video-iframe {
   width: 100%;
