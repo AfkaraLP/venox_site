@@ -120,13 +120,21 @@ onBeforeUnmount(() => {
 <template>
   <section class="music-section" ref="sectionRef">
     <h2>Music</h2>
-    <div v-if="loading">Loading music...</div>
+    <div v-if="loading">
+      <div class="music-list">
+        <div class="music-track" v-for="n in 3" :key="'skeleton-' + n">
+          <div class="track-header">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-link"></div>
+          </div>
+          <div class="track-player">
+            <div class="skeleton-audio"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-else-if="error" class="error">{{ error }}</div>
-    <div
-      v-else
-      ref="musicListRef"
-      class="music-list"
-    >
+    <div v-else ref="musicListRef" class="music-list">
       <div class="music-track" v-for="track in tracks" :key="track.link"
         :style="track.image?.href && !track._imageError ? `background: linear-gradient(120deg, #e0c3fcbb 0%, #8ec5fcbb 100%), url('${track.image.href}') center/cover no-repeat;` : ''"
       >
@@ -242,6 +250,39 @@ onBeforeUnmount(() => {
   background: linear-gradient(0deg, #e0c3fcbb 60%, transparent 100%);
   border-radius: 0 0 1.5rem 1.5rem;
   box-sizing: border-box;
+}
+.skeleton-title {
+  width: 60%;
+  height: 1.5rem;
+  border-radius: 0.7rem;
+  background: linear-gradient(90deg, #e0c3fc33 25%, #b5aaff44 50%, #e0c3fc33 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s infinite linear;
+  margin-bottom: 0.5rem;
+}
+.skeleton-link {
+  width: 80px;
+  height: 1.1rem;
+  border-radius: 0.7rem;
+  background: linear-gradient(90deg, #e0c3fc22 25%, #b5aaff33 50%, #e0c3fc22 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s infinite linear;
+}
+.skeleton-audio {
+  width: 100%;
+  height: 2.2rem;
+  border-radius: 1.2rem;
+  background: linear-gradient(90deg, #e0c3fc33 25%, #b5aaff44 50%, #e0c3fc33 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s infinite linear;
+}
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 @media (max-width: 700px) {
   .music-list {

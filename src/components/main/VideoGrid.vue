@@ -116,7 +116,16 @@ onBeforeUnmount(() => {
 <template>
   <section class="video-grid">
     <h2>Latest Videos</h2>
-    <div v-if="loading">Loading videos...</div>
+    <div v-if="loading">
+      <div class="side-scroll-grid">
+        <div class="video-card" v-for="n in 4" :key="'skeleton-' + n">
+          <div class="video-embed">
+            <div class="skeleton-thumb"></div>
+          </div>
+          <div class="skeleton-title"></div>
+        </div>
+      </div>
+    </div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
       <div v-for="(feed, channelIdx) in feeds" :key="feed.title" class="channel-section">
@@ -298,5 +307,30 @@ onBeforeUnmount(() => {
 .video-title:hover {
   color: #5a4fcf;
   text-decoration: underline;
+}
+.skeleton-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 1rem;
+  background: linear-gradient(90deg, #e0c3fc22 25%, #b5aaff33 50%, #e0c3fc22 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s infinite linear;
+}
+.skeleton-title {
+  width: 70%;
+  height: 1.3rem;
+  border-radius: 0.7rem;
+  margin: 0.7rem auto 0.5rem auto;
+  background: linear-gradient(90deg, #e0c3fc33 25%, #b5aaff44 50%, #e0c3fc33 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.2s infinite linear;
+}
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 </style> 

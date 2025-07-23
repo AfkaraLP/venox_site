@@ -5,13 +5,13 @@
         <span class="sr-only">Venox Home</span>
         <span class="logo-svg" v-html="logoSvg"></span>
       </a>
-      <span class="site-title">Venox</span>
+      <span class="site-title">LilVenox</span>
     </div>
     <nav class="main-nav">
       <a href="#music" class="nav-link">Music</a>
       <a href="#videos" class="nav-link">Videos</a>
       <a href="#art" class="nav-link">Art</a>
-      <a href="#contact" class="nav-link">Contact</a>
+      <a href="#footer" class="nav-link">Contact</a>
     </nav>
   </header>
 </template>
@@ -78,7 +78,7 @@ const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 261.76 226
   clip: rect(0,0,0,0);
   border: 0;
 }
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .venox-header {
     flex-direction: column;
     align-items: flex-start;

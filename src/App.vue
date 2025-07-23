@@ -8,6 +8,8 @@ import MusicSection from "./components/main/MusicSection.vue"
 // import ArtGallery from "./components/main/ArtGallery.vue" // still hidden
 
 const featuredVideo = ref<any>(null)
+const featuredVideoError = ref<string | null>(null)
+const videoGridLoading = ref(true)
 
 function getYoutubeId(entryId: string) {
   return entryId.split(':').pop() || ''
@@ -48,11 +50,16 @@ onMounted(async () => {
         embedUrl: getEmbedUrl(latest.id),
         thumbnail: getThumbnail(latest)
       }
+      featuredVideoError.value = null
     } else {
       featuredVideo.value = null
+      featuredVideoError.value = null
     }
   } catch (e) {
     featuredVideo.value = null
+    featuredVideoError.value = 'No featured video available.'
+  } finally {
+    videoGridLoading.value = false
   }
 })
 </script>
@@ -62,26 +69,43 @@ onMounted(async () => {
   <main class="main-content">
     <HomeHero />
     <FeaturedVideo
-      v-if="featuredVideo && featuredVideo.id && featuredVideo.thumbnail"
       :video="featuredVideo"
-      :key="featuredVideo.id"
+      :loading="videoGridLoading"
+      :key="featuredVideo?.id || 'skeleton'"
     />
-    <div v-else class="error" style="text-align:center; color:#b00; margin:2rem 0;">
-      No featured video available.
+    <div v-if="featuredVideoError" class="error" style="text-align:center; color:#b00; margin:2rem 0;">
+      {{ featuredVideoError }}
     </div>
     <VideoGrid />
     <!-- <ArtGallery /> -->
-    <MusicSection />
+    <div id="music">
+      <MusicSection />
+    </div>
   </main>
 
-  <footer>
+  <footer id="footer">
     <div class="footer-content">
       <div class="socials">
-        <a href="#" class="social-link" title="Instagram">🌸 Instagram</a>
-        <a href="#" class="social-link" title="Twitch">🎮 Twitch</a>
-        <a href="#" class="social-link" title="Discord">💬 Discord</a>
+        <a href="https://www.twitch.tv/lilvenoxofficial" class="social-link" target="_blank" rel="noopener" title="Twitch">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twitch.svg" alt="Twitch" width="28" height="28" />
+        </a>
+        <a href="https://www.instagram.com/lilvenoxmc/" class="social-link" target="_blank" rel="noopener" title="Instagram">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" width="28" height="28" />
+        </a>
+        <a href="https://discord.gg/hew9GxbbQU" class="social-link" target="_blank" rel="noopener" title="Discord">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" alt="Discord" width="28" height="28" />
+        </a>
+        <a href="https://www.youtube.com/channel/UCs9v8InFppRaPtTJjOpxWWg/membership" class="social-link" target="_blank" rel="noopener" title="YouTube">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="28" height="28" />
+        </a>
+        <a href="https://www.tiktok.com/@lilvenox" class="social-link" target="_blank" rel="noopener" title="TikTok">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="28" height="28" />
+        </a>
+        <a href="https://x.com/lil_venox" class="social-link" target="_blank" rel="noopener" title="X (Twitter)">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="28" height="28" />
+        </a>
       </div>
-      <span>© 2024 Venox Youtuber | Gaming • Genshin • Art • Music</span>
+      <span>© 2024 LilVenox | Gaming • Genshin • Art • Music</span>
     </div>
   </footer>
 </template>
