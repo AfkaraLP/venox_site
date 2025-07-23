@@ -6,7 +6,7 @@ const RSS_URL: &str = "https://www.youtube.com/feeds/videos.xml?channel_id=";
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename = "feed")]
-pub struct Feed {
+pub struct YoutubeFeed {
     pub id: String,
 
     #[serde(rename = "channelId", alias = "yt:channelId")]
@@ -54,8 +54,8 @@ pub struct MediaThumbnail {
     pub height: Option<u32>,
 }
 
-impl Feed {
-    pub async fn get_content_from_id(id: String, client: &Client) -> Result<Feed> {
+impl YoutubeFeed {
+    pub async fn get_content_from_id(id: String, client: &Client) -> Result<YoutubeFeed> {
         let response = client
             .get(format!("{RSS_URL}{id}"))
             .send()

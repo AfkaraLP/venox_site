@@ -10,3 +10,94 @@
   --color-black-prim: #252321;
   --font-genshin: "Genshin";
 }
+
+body {
+  background: url('/src/assets/images/art-bg-1.jpg') center center / cover no-repeat fixed, linear-gradient(120deg, #f9e7fe 0%, #e0f7fa 100%);
+  font-family: 'genshin', 'Segoe UI', 'Arial', sans-serif;
+  color: #333;
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.65);
+  pointer-events: none;
+  z-index: 0;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    padding: 0 1rem;
+    max-width: 100vw;
+  }
+}
+
+footer {
+  background: #f3eaff;
+  border-top: 2px solid #e0c3fc;
+  text-align: center;
+  padding: 1.5rem 0 1rem 0;
+  font-size: 1rem;
+  color: #7b6ee6;
+  border-radius: 2rem 2rem 0 0;
+  box-shadow: 0 -2px 16px #b5aaff11;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-content .socials {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.social-link {
+  font-size: 1.1rem;
+  color: #7b6ee6;
+  text-decoration: none;
+  background: #fff6;
+  padding: 0.4rem 1rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 1px 6px #b5aaff22;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.social-link:hover {
+  background: #e0c3fc;
+  color: #5a4fcf;
+  transform: scale(1.07) rotate(-2deg);
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'genshin', 'Segoe UI', 'Arial', sans-serif;
+}
+
+/* Remove sparkle SVG background for new art background */
+body::before {
+  content: none;
+}

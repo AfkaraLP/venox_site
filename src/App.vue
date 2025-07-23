@@ -1,21 +1,87 @@
 <script setup lang="ts">
-import VenoxHeader from "./components/header/venoxheader.vue"
-import DisplayVideo from "./components/main/youtube/displayvideo.vue"
+import { ref, onMounted } from 'vue'
+import VenoxHeader from "./components/header/venoxHeader.vue"
+import HomeHero from "./components/main/HomeHero.vue"
+import FeaturedVideo from "./components/main/FeaturedVideo.vue"
+import VideoGrid from "./components/main/VideoGrid.vue"
+import MusicSection from "./components/main/MusicSection.vue"
+// import ArtGallery from "./components/main/ArtGallery.vue" // still hidden
 
-</script>
+const featuredVideo = ref<any>(null)
 
-<script lang="ts">
+function getYoutubeId(entryId: string) {
+  return entryId.split(':').pop() || ''
+}
+function getYoutubeUrl(entryId: string) {
+  const vid = getYoutubeId(entryId)
+  return `https://www.youtube.com/watch?v=${vid}`
+}
+function getEmbedUrl(entryId: string) {
+  const vid = getYoutubeId(entryId)
+  return `https://www.youtube.com/embed/${vid}`
+}
+function getThumbnail(entry: any) {
+  return (
+    entry.media_group?.media_thumbnail?.url ||
+    entry.group?.thumbnail?.url ||
+    ''
+  )
+}
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/youtube_videos')
+    const feeds = await res.json()
+    let allVideos = feeds.flatMap((feed: any) => Array.isArray(feed.entry) ? feed.entry : [])
+    allVideos = allVideos.filter((v: any) => v && v.id && v.title && v.published)
+    allVideos.sort((a: any, b: any) => {
+      const dateA = new Date(a.published).getTime()
+      const dateB = new Date(b.published).getTime()
+      return dateB - dateA
+    })
+    const latest = allVideos[0]
+    if (latest && latest.id && getThumbnail(latest)) {
+      featuredVideo.value = {
+        id: latest.id,
+        title: latest.title,
+        url: getYoutubeUrl(latest.id),
+        embedUrl: getEmbedUrl(latest.id),
+        thumbnail: getThumbnail(latest)
+      }
+    } else {
+      featuredVideo.value = null
+    }
+  } catch (e) {
+    featuredVideo.value = null
+  }
+})
 </script>
 
 <template>
-  <header>
-    <VenoxHeader />
-  </header>
-
-  <main>
-    <DisplayVideo />
+  <VenoxHeader />
+  <main class="main-content">
+    <HomeHero />
+    <FeaturedVideo
+      v-if="featuredVideo && featuredVideo.id && featuredVideo.thumbnail"
+      :video="featuredVideo"
+      :key="featuredVideo.id"
+    />
+    <div v-else class="error" style="text-align:center; color:#b00; margin:2rem 0;">
+      No featured video available.
+    </div>
+    <VideoGrid />
+    <!-- <ArtGallery /> -->
+    <MusicSection />
   </main>
 
   <footer>
+    <div class="footer-content">
+      <div class="socials">
+        <a href="#" class="social-link" title="Instagram">🌸 Instagram</a>
+        <a href="#" class="social-link" title="Twitch">🎮 Twitch</a>
+        <a href="#" class="social-link" title="Discord">💬 Discord</a>
+      </div>
+      <span>© 2024 Venox Youtuber | Gaming • Genshin • Art • Music</span>
+    </div>
   </footer>
 </template>
