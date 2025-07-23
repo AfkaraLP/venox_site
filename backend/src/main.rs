@@ -5,6 +5,7 @@ use model::youtube::YoutubeFeed;
 use reqwest::Client;
 
 mod model;
+mod util;
 
 const PORT: u16 = 9999;
 
