@@ -6,6 +6,7 @@ use model::soundcloud::SoundcloudFeed;
 use model::youtube::YoutubeFeed;
 use reqwest::Client;
 use rusqlite::Connection;
+use std::ops::Index;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
@@ -57,13 +58,13 @@ async fn main() -> std::io::Result<()> {
             store_interval.tick().await;
             println!("fetched new database data");
 
-            for account_id in VENOX_YT_ACCOUNT_IDS {
+            for (idx, account_id) in VENOX_YT_ACCOUNT_IDS.iter().enumerate() {
                 if let Ok(response) = YoutubeFeed::get_content_from_id(account_id, &client).await {
                     let connection = connection.lock().await;
                     venox_db::insert_youtube_feed(&connection, &response)
                         .expect("insert new data into youtube feed");
                     let mut yt_data = yt_data.write().await;
-                    yt_data.push(response);
+                    yt_data.insert(idx, response);
                 }
             }
 
