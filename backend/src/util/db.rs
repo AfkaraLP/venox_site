@@ -5,10 +5,10 @@ use crate::model::youtube::YoutubeFeed;
 use anyhow::Result;
 use rusqlite::{Connection, params};
 
-pub fn initialize_youtube_db(connection: &Connection, feed: &YoutubeFeed) -> Result<()> {
+pub fn initialize_youtube_db(connection: &Connection) -> Result<()> {
     let sql: &str = "
         -- Main feed table
-        CREATE TABLE youtube_feed (
+        CREATE TABLE IF NOT EXISTS youtube_feed (
             id TEXT PRIMARY KEY,
             yt_channel_id TEXT NOT NULL,
             title TEXT NOT NULL,
@@ -16,7 +16,7 @@ pub fn initialize_youtube_db(connection: &Connection, feed: &YoutubeFeed) -> Res
         );
 
         -- Entries table, linked to youtube_feed
-        CREATE TABLE youtube_entry (
+        CREATE TABLE IF NOT EXISTS youtube_entry (
             id TEXT PRIMARY KEY,
             feed_id TEXT NOT NULL,
             title TEXT NOT NULL,
@@ -32,8 +32,7 @@ pub fn initialize_youtube_db(connection: &Connection, feed: &YoutubeFeed) -> Res
     ";
 
     connection.execute_batch(sql)?;
-
-    insert_youtube_feed(connection, feed)
+    Ok(())
 }
 
 pub fn insert_youtube_feed(connection: &Connection, feed: &YoutubeFeed) -> Result<()> {
@@ -72,17 +71,17 @@ pub fn insert_youtube_feed(connection: &Connection, feed: &YoutubeFeed) -> Resul
     Ok(())
 }
 
-pub fn initialize_soundcloud_db(connection: &Connection, feed: &SoundcloudFeed) -> Result<()> {
+pub fn initialize_soundcloud_db(connection: &Connection) -> Result<()> {
     let sql: &str = "
         -- Table for the feed's channel
-        CREATE TABLE channels (
+        CREATE TABLE IF NOT EXISTS channels (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL,
             description TEXT NOT NULL
         );
 
         -- Table for profile images of a channel (can have multiple)
-        CREATE TABLE channel_images (
+        CREATE TABLE IF NOT EXISTS channel_images (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             channel_id INTEGER NOT NULL,
             url TEXT,
@@ -90,7 +89,7 @@ pub fn initialize_soundcloud_db(connection: &Connection, feed: &SoundcloudFeed) 
         );
 
         -- Table for songs/items
-        CREATE TABLE songs (
+        CREATE TABLE IF NOT EXISTS songs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             channel_id INTEGER NOT NULL,
             title TEXT NOT NULL,
@@ -107,7 +106,7 @@ pub fn initialize_soundcloud_db(connection: &Connection, feed: &SoundcloudFeed) 
 
     connection.execute_batch(&sql)?;
 
-    insert_soundcloud_feed(connection, feed)
+    Ok(())
 }
 
 pub fn insert_soundcloud_feed(connection: &Connection, feed: &SoundcloudFeed) -> Result<()> {

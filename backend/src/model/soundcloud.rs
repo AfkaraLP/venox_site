@@ -72,8 +72,8 @@ pub enum Type {
 }
 
 impl SoundcloudFeed {
-    pub async fn get_content_from_id(id: String, client: &Client) -> Result<SoundcloudFeed> {
-        let url = RSS_URL.replace("$$ID$$", id.as_str());
+    pub async fn get_content_from_id(id: &str, client: &Client) -> Result<SoundcloudFeed> {
+        let url = RSS_URL.replace("$$ID$$", id);
         let response = client.get(&url).send().await?.text().await?;
         serde_xml_rs::from_str::<SoundcloudFeed>(&response).map_err(|_| anyhow!("xml skill issue"))
     }

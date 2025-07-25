@@ -55,7 +55,7 @@ pub struct MediaThumbnail {
 }
 
 impl YoutubeFeed {
-    pub async fn get_content_from_id(id: String, client: &Client) -> Result<YoutubeFeed> {
+    pub async fn get_content_from_id(id: &str, client: &Client) -> Result<YoutubeFeed> {
         let response = client
             .get(format!("{RSS_URL}{id}"))
             .send()
