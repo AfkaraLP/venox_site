@@ -1,7 +1,7 @@
-use crate::model::soundcloud;
 use crate::model::soundcloud::SoundcloudFeed;
-use crate::model::youtube;
-use crate::model::youtube::YoutubeFeed;
+use crate::model::youtube::{self, Author, MediaGroup};
+use crate::model::youtube::{Entry, YoutubeFeed};
+use crate::model::{soundcloud, youtube::MediaThumbnail};
 use anyhow::Result;
 use rusqlite::{Connection, params};
 
@@ -327,4 +327,130 @@ mod tests {
         let count: i64 = stmt.query_row([], |row| row.get(0)).unwrap();
         assert_eq!(count, 1);
     }
+}
+
+pub fn get_youtube_feeds_from_db(
+    connection: &Connection,
+    account_ids: Vec<&str>,
+) -> Result<Vec<YoutubeFeed>> {
+    let mut feeds: Vec<YoutubeFeed> = vec![];
+    for id in account_ids {
+        let Some((_, id)) = id.split_once("UC") else {
+            continue;
+        };
+        let mut statement = connection.prepare(
+            "SELECT
+                yt_channel_id,
+                title,
+                published,
+                id
+            FROM
+                youtube_feed
+            WHERE
+                yt_channel_id = (?1)",
+        )?;
+        let mut rows = statement.query([id])?;
+        if let Some(row) = rows.next()? {
+            let mut feed = YoutubeFeed {
+                id: row.get(3)?,
+                yt_channel_id: row.get(0)?,
+                title: row.get(1)?,
+                published: row.get(2)?,
+                entry: vec![],
+            };
+            let mut statement = connection.prepare(
+                "SELECT
+                        id,
+                        title,
+                        author_name, 
+                        author_uri,
+                        published,
+                        updated,
+                        thumbnail_url,
+                        thumbnail_width,
+                        thumbnail_height
+                    FROM
+                        youtube_entry
+                    WHERE
+                        feed_id = (?1)
+                ",
+            )?;
+            let entries = statement.query_map([&feed.id], |row| {
+                Ok(Entry {
+                    id: row.get(0)?,
+                    title: row.get(1)?,
+                    author: Author {
+                        name: row.get(2)?,
+                        uri: row.get(3)?,
+                    },
+                    published: row.get(4)?,
+                    updated: row.get(5)?,
+                    media_group: MediaGroup {
+                        media_thumbnail: MediaThumbnail {
+                            url: row.get(6)?,
+                            width: row.get(7)?,
+                            height: row.get(8)?,
+                        },
+                    },
+                })
+            })?;
+            for entry in entries {
+                feed.entry.push(entry?);
+            }
+            feeds.push(feed);
+        }
+    }
+    Ok(feeds)
+}
+
+pub fn get_soundcloud_feeds_from_db(
+    connection: &Connection,
+    account_ids: Vec<&str>,
+) -> Result<Vec<SoundcloudFeed>> {
+    let mut feeds: Vec<SoundcloudFeed> = vec![];
+    let mut statement = connection.prepare(
+        "
+            SELECT
+                username,
+                description
+            FROM
+                channels
+            WHERE
+                id = (?1)
+        ",
+    )?;
+    for id in account_ids {
+        let mut rows = statement.query([id])?;
+    }
+    //     -- Table for the feed's channel
+    //     CREATE TABLE IF NOT EXISTS channels (
+    //         id INTEGER PRIMARY KEY AUTOINCREMENT,
+    //         username TEXT NOT NULL,
+    //         description TEXT NOT NULL
+    //     );
+
+    //     -- Table for profile images of a channel (can have multiple)
+    //     CREATE TABLE IF NOT EXISTS channel_images (
+    //         id INTEGER PRIMARY KEY AUTOINCREMENT,
+    //         channel_id INTEGER NOT NULL,
+    //         url TEXT,
+    //         FOREIGN KEY (channel_id) REFERENCES channels(id)
+    //     );
+
+    //     -- Table for songs/items
+    //     CREATE TABLE IF NOT EXISTS songs (
+    //         id INTEGER PRIMARY KEY AUTOINCREMENT,
+    //         channel_id INTEGER NOT NULL,
+    //         title TEXT NOT NULL,
+    //         pub_date TEXT NOT NULL,
+    //         link TEXT NOT NULL,
+    //         duration TEXT NOT NULL,
+    //         description TEXT NOT NULL,
+    //         enclosure_url TEXT NOT NULL,
+    //         enclosure_type TEXT,
+    //         image_url TEXT,
+    //         FOREIGN KEY (channel_id) REFERENCES channels(id)
+    //     );
+    // ";
+    Ok(feeds)
 }

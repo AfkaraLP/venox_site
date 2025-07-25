@@ -1,5 +1,7 @@
-use actix_web::{App, HttpResponse, get, http::header::ContentType};
-use actix_web::{HttpServer, Responder, web};
+use actix_web::error::ErrorInternalServerError;
+use actix_web::{App, Error, HttpResponse, get, http::header::ContentType};
+use actix_web::{HttpServer, Responder, error, web};
+use anyhow::{Context, Result, anyhow};
 use model::soundcloud::SoundcloudFeed;
 use model::youtube::{Author, Entry, MediaGroup, MediaThumbnail, YoutubeFeed};
 use reqwest::Client;
@@ -8,7 +10,7 @@ use serde_json::json;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
-use util::db as venox_db;
+use util::db::{self as venox_db, get_youtube_feeds_from_db};
 
 mod model;
 mod util;
@@ -47,6 +49,7 @@ async fn main() -> std::io::Result<()> {
     tokio::spawn(async move {
         loop {
             store_interval.tick().await;
+            println!("fetched new database data");
 
             for account_id in VENOX_YT_ACCOUNT_IDS {
                 if let Ok(response) = YoutubeFeed::get_content_from_id(account_id, &client).await {
@@ -66,6 +69,7 @@ async fn main() -> std::io::Result<()> {
         }
     });
 
+    println!("opening server on port {PORT}");
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(data.clone()))
@@ -78,70 +82,15 @@ async fn main() -> std::io::Result<()> {
 }
 
 #[get("/youtube_videos")]
-async fn venox_accounts(data: web::Data<AppState>) -> impl Responder {
+async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Error> {
     let connection = data.connection.lock().await;
-    let mut feeds: Vec<YoutubeFeed> = vec![];
-    for id in VENOX_YT_ACCOUNT_IDS {
-        let Some((_, id)) = id.split_once("UC") else {
-            continue;
-        };
-        let mut statement = connection
-            .prepare("SELECT yt_channel_id, title, published, id FROM youtube_feed WHERE yt_channel_id = (?1)")
-            .unwrap();
-        let mut rows = statement.query([id]).unwrap();
-        if let Some(row) = rows.next().unwrap() {
-            let mut feed = YoutubeFeed {
-                id: row.get(3).unwrap(),
-                yt_channel_id: row.get(0).unwrap(),
-                title: row.get(1).unwrap(),
-                published: row.get(2).unwrap(),
-                entry: vec![],
-            };
-            let mut statement = connection
-                .prepare(
-                    "SELECT
-                    id,
-                    title,
-                    author_name, 
-                    author_uri,
-                    published,
-                    updated,
-                    thumbnail_url,
-                    thumbnail_width,
-                    thumbnail_height
-                FROM youtube_entry
-                WHERE feed_id = (?1)
-                ",
-                )
-                .unwrap();
-            let entries = statement
-                .query_map([&feed.id], |row| {
-                    Ok(Entry {
-                        id: row.get(0).unwrap(),
-                        title: row.get(1).unwrap(),
-                        author: Author {
-                            name: row.get(2).unwrap(),
-                            uri: row.get(3).unwrap(),
-                        },
-                        published: row.get(4).unwrap(),
-                        updated: row.get(5).unwrap(),
-                        media_group: MediaGroup {
-                            media_thumbnail: MediaThumbnail {
-                                url: row.get(6).unwrap(),
-                                width: row.get(7).unwrap(),
-                                height: row.get(8).unwrap(),
-                            },
-                        },
-                    })
-                })
-                .unwrap();
-            for entry in entries {
-                feed.entry.push(entry.expect("y3s the entry indeed"));
-            }
-            feeds.push(feed);
-        }
-    }
-    web::Json(feeds)
+    let feeds =
+        get_youtube_feeds_from_db(&connection, VENOX_YT_ACCOUNT_IDS.into()).map_err(|e| {
+            eprintln!("Error getting youtube feeds: {e:?}");
+            ErrorInternalServerError("Error Getting Youtube Feeds")
+        })?;
+
+    Ok(web::Json(feeds))
 }
 
 #[get("/soundcloud_data")]
