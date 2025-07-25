@@ -88,9 +88,9 @@ onMounted(async () => {
   <footer id="footer">
     <div class="footer-content">
       <div class="socials">
-        <a href="https://www.twitch.tv/lilvenoxofficial" class="social-link" target="_blank" rel="noopener" title="Twitch">
-          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twitch.svg" alt="Twitch" width="28" height="28" />
-        </a>
+        <!-- <a href="https://www.twitch.tv/lilvenoxofficial" class="social-link" target="_blank" rel="noopener" title="Twitch"> -->
+          <!-- <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twitch.svg" alt="Twitch" width="28" height="28" /> -->
+        <!-- </a> -->
         <a href="https://www.instagram.com/lilvenoxmc/" class="social-link" target="_blank" rel="noopener" title="Instagram">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" width="28" height="28" />
         </a>
