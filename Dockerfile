@@ -1,42 +1,16 @@
-# Stage 1: Build with Nix Flakes
-FROM nixos/nix:2.18.1 as builder
+FROM oven/bun:1.1 AS builder
 
-# Enable flakes and experimental features
-ENV NIX_CONFIG 'experimental-features = nix-command flakes'
-
-# Copy the whole repo
-WORKDIR /workspace
+WORKDIR /app
 COPY . .
 
-# Build backend (Rust)
-WORKDIR /workspace/backend
-RUN nix develop .# --command cargo build --release
-# Debug: List the build output
-RUN ls -lh /workspace/backend/target/release/ && \
-    if [ ! -f /workspace/backend/target/release/backend ]; then \
-      echo 'ERROR: backend binary not found!'; \
-      exit 1; \
-    fi && \
-    chmod +x /workspace/backend/target/release/backend
-# Check dynamic library dependencies
-RUN ldd /workspace/backend/target/release/backend || echo "ldd not available"
-# Prevent builder image removal for debugging
-RUN true
+RUN bun install
+RUN bun run build
 
-# Stage 2: Minimal runtime image
-FROM debian:bookworm-slim
+FROM nginx:stable-alpine
 
-# Install minimal dependencies (e.g., for SSL if needed)
-RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy backend binary
-COPY --from=builder /workspace/backend/target/release/backend /usr/local/bin/backend
+COPY frontend.nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose ports (adjust as needed)
-EXPOSE 9999
-
-# Set environment variables if needed
-ENV FRONTEND_DIST=/srv/frontend
-
-# Start the backend (assumes it serves static files from $FRONTEND_DIST)
-CMD ["/usr/local/bin/backend"] 
+EXPOSE 9998
+CMD ["nginx", "-g", "daemon off;"]

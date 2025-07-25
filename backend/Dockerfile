@@ -1,6 +1,9 @@
-FROM rust:1.83
+FROM rust:latest
 
 WORKDIR /app
 COPY . .
 
-RUN nix build .#
+RUN cargo build --release
+
+CMD ["./target/release/backend"]
+EXPOSE 9999

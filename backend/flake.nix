@@ -69,6 +69,8 @@
             lockFile = ./Cargo.lock;
           };
 
+          cargoVendorDir = "vendor";
+
           nativeBuildInputs = with pkgs; [pkg-config];
           buildInputs = with pkgs; [ openssl sqlite ];
         };
