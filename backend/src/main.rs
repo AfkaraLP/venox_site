@@ -9,6 +9,7 @@ use rusqlite::Connection;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
+use tokio::sync::RwLock;
 use util::db::{self as venox_db, get_youtube_feeds_from_db};
 
 mod model;
@@ -29,8 +30,8 @@ const VENOX_SOUNDCLOUD_ID: &str = "001310885850";
 #[derive(Clone)]
 struct AppState {
     connection: Arc<Mutex<Connection>>,
-    sc_data: Option<Arc<Mutex<SoundcloudFeed>>>,
-    yt_data: Option<Arc<Mutex<Vec<YoutubeFeed>>>>,
+    sc_data: Arc<RwLock<Option<SoundcloudFeed>>>,
+    yt_data: Arc<RwLock<Vec<YoutubeFeed>>>,
 }
 
 #[actix_web::main]
@@ -42,8 +43,8 @@ async fn main() -> std::io::Result<()> {
     venox_db::initialize_youtube_db(&connection).expect("initialize database");
     let data = AppState {
         connection: Arc::new(Mutex::new(connection)),
-        sc_data: None,
-        yt_data: None,
+        sc_data: Arc::new(RwLock::new(None)),
+        yt_data: Arc::new(RwLock::new(Vec::new())),
     };
 
     let mut store_interval = tokio::time::interval(Duration::from_secs(60));
@@ -61,6 +62,8 @@ async fn main() -> std::io::Result<()> {
                     let connection = connection.lock().await;
                     venox_db::insert_youtube_feed(&connection, &response)
                         .expect("insert new data into youtube feed");
+                    let mut yt_data = yt_data.write().await;
+                    yt_data.push(response);
                 }
             }
 
@@ -70,9 +73,8 @@ async fn main() -> std::io::Result<()> {
                 let connection = connection.lock().await;
                 venox_db::insert_soundcloud_feed(&connection, &response)
                     .expect("insert new data into soundcloud database");
-                if let None = sc_data {
-                    sc_data.replace(Arc::new(Mutex::new(response)));
-                }
+                let mut sc_data = sc_data.write().await;
+                sc_data.replace(response);
             }
         }
     });
@@ -91,23 +93,29 @@ async fn main() -> std::io::Result<()> {
 
 #[get("/youtube_videos")]
 async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Error> {
+    if data.yt_data.read().await.len() > 0 {
+        let feeds = data.yt_data.read().await;
+        let feeds = serde_json::to_value(&*feeds)?;
+        return Ok(web::Json(feeds));
+    }
     let connection = data.connection.lock().await;
     let feeds =
         get_youtube_feeds_from_db(&connection, VENOX_YT_ACCOUNT_IDS.into()).map_err(|e| {
             eprintln!("Error getting youtube feeds: {e:?}");
             ErrorInternalServerError("Error Getting Youtube Feeds")
         })?;
-
+    let feeds = serde_json::to_value(&*feeds)?;
     Ok(web::Json(feeds))
 }
 
 #[get("/soundcloud_data")]
 async fn soundcloud_data(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    if let Some(sc_data) = data.sc_data.clone() {
-        let sc_data = sc_data.lock().await;
+    if data.sc_data.read().await.is_some() {
+        let sc_data = data.sc_data.write().await;
         let sc_data = serde_json::to_value(&*sc_data)?;
         return Ok(web::Json(sc_data));
     }
+
     let connection = data.connection.lock().await;
     let feeds = venox_db::get_soundcloud_feeds_from_db(&connection, vec![VENOX_SOUNDCLOUD_ID])
         .map_err(|e| {
