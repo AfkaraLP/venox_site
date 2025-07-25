@@ -57,5 +57,23 @@
           };
         };
       });
+
+      packages = forEachSupportedSystem ({ pkgs }: {
+        default = pkgs.rustPlatform.buildRustPackage {
+          pname = "venox-backend";
+          version = "0.1.0";
+
+          src = ./.;
+
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+          };
+
+          cargoVendorDir = "vendor";
+
+          nativeBuildInputs = with pkgs; [pkg-config];
+          buildInputs = with pkgs; [ openssl sqlite ];
+        };
+      });
     };
 }

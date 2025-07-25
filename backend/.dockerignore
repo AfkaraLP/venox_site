@@ -1,0 +1,24 @@
+# Build artifacts
+target
+**/*.rs.bk
+
+# Cargo files that don't need to be copied unless needed
+**/*.lock
+
+# Git
+.git
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode
+.idea
+
+# Environment files (optional)
+.env
+.env.local
+.env.*.local
+
