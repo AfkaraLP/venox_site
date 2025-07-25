@@ -10,7 +10,7 @@
     <nav class="main-nav-mc">
       <a href="#music" class="nav-link-mc">Music</a>
       <a href="#videos" class="nav-link-mc">Videos</a>
-      <a href="#art" class="nav-link-mc">Art</a>
+      <!-- <a href="#art" class="nav-link-mc">Art</a> -->
       <a href="#footer" class="nav-link-mc">Contact</a>
     </nav>
   </header>

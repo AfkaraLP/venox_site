@@ -100,12 +100,12 @@ onMounted(async () => {
         <a href="https://www.youtube.com/channel/UCs9v8InFppRaPtTJjOpxWWg/membership" class="social-link" target="_blank" rel="noopener" title="YouTube">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="28" height="28" />
         </a>
-        <a href="https://www.tiktok.com/@lilvenox" class="social-link" target="_blank" rel="noopener" title="TikTok">
-          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="28" height="28" />
-        </a>
-        <a href="https://x.com/lil_venox" class="social-link" target="_blank" rel="noopener" title="X (Twitter)">
-          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="28" height="28" />
-        </a>
+        <!-- <a href="https://www.tiktok.com/@lilvenox" class="social-link" target="_blank" rel="noopener" title="TikTok"> -->
+          <!-- <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="28" height="28" /> -->
+        <!-- </a> -->
+        <!-- <a href="https://x.com/lil_venox" class="social-link" target="_blank" rel="noopener" title="X (Twitter)"> -->
+          <!-- <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="28" height="28" /> -->
+        <!-- </a> -->
       </div>
       <span>© 2025 LilVenox</span>
     </div>
