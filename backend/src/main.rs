@@ -6,7 +6,7 @@ use model::soundcloud::SoundcloudFeed;
 use model::youtube::YoutubeFeed;
 use reqwest::Client;
 use rusqlite::Connection;
-use std::ops::Index;
+use std::ops::{Index, IndexMut};
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
@@ -51,8 +51,8 @@ async fn main() -> std::io::Result<()> {
     let mut store_interval = tokio::time::interval(Duration::from_secs(60));
 
     let connection = data.connection.clone();
-    let mut sc_data = data.sc_data.clone();
-    let mut yt_data = data.yt_data.clone();
+    let sc_data = data.sc_data.clone();
+    let yt_data = data.yt_data.clone();
     tokio::spawn(async move {
         loop {
             store_interval.tick().await;
@@ -64,7 +64,11 @@ async fn main() -> std::io::Result<()> {
                     venox_db::insert_youtube_feed(&connection, &response)
                         .expect("insert new data into youtube feed");
                     let mut yt_data = yt_data.write().await;
-                    yt_data.insert(idx, response);
+                    if let Some(account_data) = yt_data.get_mut(idx) {
+                        *account_data = response;
+                    } else {
+                        yt_data.insert(idx, response);
+                    }
                 }
             }
 
