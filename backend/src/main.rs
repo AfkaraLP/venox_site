@@ -29,6 +29,8 @@ const VENOX_SOUNDCLOUD_ID: &str = "001310885850";
 #[derive(Clone)]
 struct AppState {
     connection: Arc<Mutex<Connection>>,
+    sc_data: Option<Arc<Mutex<SoundcloudFeed>>>,
+    yt_data: Option<Arc<Mutex<Vec<YoutubeFeed>>>>,
 }
 
 #[actix_web::main]
@@ -40,11 +42,15 @@ async fn main() -> std::io::Result<()> {
     venox_db::initialize_youtube_db(&connection).expect("initialize database");
     let data = AppState {
         connection: Arc::new(Mutex::new(connection)),
+        sc_data: None,
+        yt_data: None,
     };
 
     let mut store_interval = tokio::time::interval(Duration::from_secs(60));
 
     let connection = data.connection.clone();
+    let mut sc_data = data.sc_data.clone();
+    let mut yt_data = data.yt_data.clone();
     tokio::spawn(async move {
         loop {
             store_interval.tick().await;
@@ -64,6 +70,9 @@ async fn main() -> std::io::Result<()> {
                 let connection = connection.lock().await;
                 venox_db::insert_soundcloud_feed(&connection, &response)
                     .expect("insert new data into soundcloud database");
+                if let None = sc_data {
+                    sc_data.replace(Arc::new(Mutex::new(response)));
+                }
             }
         }
     });
@@ -94,11 +103,18 @@ async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Err
 
 #[get("/soundcloud_data")]
 async fn soundcloud_data(data: web::Data<AppState>) -> Result<impl Responder, Error> {
+    if let Some(sc_data) = data.sc_data.clone() {
+        let sc_data = sc_data.lock().await;
+        let sc_data = serde_json::to_value(&*sc_data)?;
+        return Ok(web::Json(sc_data));
+    }
     let connection = data.connection.lock().await;
     let feeds = venox_db::get_soundcloud_feeds_from_db(&connection, vec![VENOX_SOUNDCLOUD_ID])
         .map_err(|e| {
             eprintln!("Error getting youtube feeds: {e:?}");
             ErrorInternalServerError("Error Getting Youtube Feeds")
         })?;
-    Ok(web::Json(feeds.into_iter().next()))
+    let feed = feeds.into_iter().next();
+    let feed = serde_json::to_value(feed)?;
+    Ok(web::Json(feed))
 }
