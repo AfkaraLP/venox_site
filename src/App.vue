@@ -107,7 +107,7 @@ onMounted(async () => {
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="28" height="28" />
         </a>
       </div>
-      <span>© 2024 LilVenox | Gaming • Genshin • Art • Music</span>
+      <span>© 2025 LilVenox</span>
     </div>
   </footer>
 </template>
