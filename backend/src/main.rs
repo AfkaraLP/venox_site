@@ -1,12 +1,11 @@
 use actix_web::error::ErrorInternalServerError;
-use actix_web::{App, Error, HttpResponse, get, http::header::ContentType};
-use actix_web::{HttpServer, Responder, error, web};
-use anyhow::{Context, Result, anyhow};
+use actix_web::{App, Error, get};
+use actix_web::{HttpServer, Responder, web};
+use anyhow::Result;
 use model::soundcloud::SoundcloudFeed;
-use model::youtube::{Author, Entry, MediaGroup, MediaThumbnail, YoutubeFeed};
+use model::youtube::YoutubeFeed;
 use reqwest::Client;
 use rusqlite::Connection;
-use serde_json::json;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
@@ -94,8 +93,12 @@ async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Err
 }
 
 #[get("/soundcloud_data")]
-async fn soundcloud_data(data: web::Data<AppState>) -> impl Responder {
+async fn soundcloud_data(data: web::Data<AppState>) -> Result<impl Responder, Error> {
     let connection = data.connection.lock().await;
-    todo!();
-    web::Json(json!({"error": "getting soundcloud data"}))
+    let feeds = venox_db::get_soundcloud_feeds_from_db(&connection, vec![VENOX_SOUNDCLOUD_ID])
+        .map_err(|e| {
+            eprintln!("Error getting youtube feeds: {e:?}");
+            ErrorInternalServerError("Error Getting Youtube Feeds")
+        })?;
+    Ok(web::Json(feeds.into_iter().next()))
 }

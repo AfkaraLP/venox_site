@@ -1,5 +1,5 @@
-use crate::model::soundcloud::SoundcloudFeed;
-use crate::model::youtube::{self, Author, MediaGroup};
+use crate::model::soundcloud::{Channel, ImageElement, Song, SoundcloudFeed};
+use crate::model::youtube::{Author, MediaGroup};
 use crate::model::youtube::{Entry, YoutubeFeed};
 use crate::model::{soundcloud, youtube::MediaThumbnail};
 use anyhow::Result;
@@ -75,7 +75,7 @@ pub fn initialize_soundcloud_db(connection: &Connection) -> Result<()> {
     let sql: &str = "
         -- Table for the feed's channel
         CREATE TABLE IF NOT EXISTS channels (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             username TEXT NOT NULL,
             description TEXT NOT NULL
         );
@@ -83,7 +83,7 @@ pub fn initialize_soundcloud_db(connection: &Connection) -> Result<()> {
         -- Table for profile images of a channel (can have multiple)
         CREATE TABLE IF NOT EXISTS channel_images (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            channel_id INTEGER NOT NULL,
+            channel_id TEXT NOT NULL,
             url TEXT,
             FOREIGN KEY (channel_id) REFERENCES channels(id)
         );
@@ -91,7 +91,7 @@ pub fn initialize_soundcloud_db(connection: &Connection) -> Result<()> {
         -- Table for songs/items
         CREATE TABLE IF NOT EXISTS songs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            channel_id INTEGER NOT NULL,
+            channel_id TEXT NOT NULL,
             title TEXT NOT NULL,
             pub_date TEXT NOT NULL,
             link TEXT NOT NULL,
@@ -111,16 +111,20 @@ pub fn initialize_soundcloud_db(connection: &Connection) -> Result<()> {
 
 pub fn insert_soundcloud_feed(connection: &Connection, feed: &SoundcloudFeed) -> Result<()> {
     connection.execute(
-        "INSERT INTO channels (username, description) VALUES (?1, ?2)",
-        params![feed.channel.username, feed.channel.description],
+        "INSERT OR REPLACE INTO channels (id, username, description) VALUES (?1, ?2, ?3)",
+        params![
+            feed.channel_id,
+            feed.channel.username,
+            feed.channel.description,
+        ],
     )?;
 
-    let channel_id = connection.last_insert_rowid();
+    let channel_id = &feed.channel_id;
 
     for image in &feed.channel.profile_pictures {
         if let Some(url) = &image.url {
             connection.execute(
-                "INSERT INTO channel_images (channel_id, url) VALUES (?1, ?2)",
+                "INSERT OR REPLACE INTO channel_images (channel_id, url) VALUES (?1, ?2)",
                 params![channel_id, url],
             )?;
         }
@@ -128,7 +132,7 @@ pub fn insert_soundcloud_feed(connection: &Connection, feed: &SoundcloudFeed) ->
 
     for song in &feed.channel.item {
         connection.execute(
-            "INSERT INTO songs (
+            "INSERT OR REPLACE INTO songs (
                 channel_id, title, pub_date, link, duration, description,
                 enclosure_url, enclosure_type, image_url
             ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
@@ -155,6 +159,8 @@ pub fn insert_soundcloud_feed(connection: &Connection, feed: &SoundcloudFeed) ->
 
 #[cfg(test)]
 mod tests {
+    use crate::model::youtube;
+
     use super::*;
 
     use rusqlite::Connection;
@@ -198,6 +204,7 @@ mod tests {
 
         // Build dummy feed
         let feed = SoundcloudFeed {
+            channel_id: "1".to_string(),
             channel: soundcloud::Channel {
                 username: "test_user".to_string(),
                 description: "test description".to_string(),
@@ -334,22 +341,40 @@ pub fn get_youtube_feeds_from_db(
     account_ids: Vec<&str>,
 ) -> Result<Vec<YoutubeFeed>> {
     let mut feeds: Vec<YoutubeFeed> = vec![];
+    let mut statement_youtube_feed = connection.prepare(
+        "SELECT
+            yt_channel_id,
+            title,
+            published,
+            id
+        FROM
+            youtube_feed
+        WHERE
+            yt_channel_id = (?1)
+        ",
+    )?;
+    let mut statement_youtube_entry = connection.prepare(
+        "SELECT
+            id,
+            title,
+            author_name, 
+            author_uri,
+            published,
+            updated,
+            thumbnail_url,
+            thumbnail_width,
+            thumbnail_height
+        FROM
+            youtube_entry
+        WHERE
+            feed_id = (?1)
+        ",
+    )?;
     for id in account_ids {
         let Some((_, id)) = id.split_once("UC") else {
             continue;
         };
-        let mut statement = connection.prepare(
-            "SELECT
-                yt_channel_id,
-                title,
-                published,
-                id
-            FROM
-                youtube_feed
-            WHERE
-                yt_channel_id = (?1)",
-        )?;
-        let mut rows = statement.query([id])?;
+        let mut rows = statement_youtube_feed.query([id])?;
         if let Some(row) = rows.next()? {
             let mut feed = YoutubeFeed {
                 id: row.get(3)?,
@@ -358,24 +383,7 @@ pub fn get_youtube_feeds_from_db(
                 published: row.get(2)?,
                 entry: vec![],
             };
-            let mut statement = connection.prepare(
-                "SELECT
-                        id,
-                        title,
-                        author_name, 
-                        author_uri,
-                        published,
-                        updated,
-                        thumbnail_url,
-                        thumbnail_width,
-                        thumbnail_height
-                    FROM
-                        youtube_entry
-                    WHERE
-                        feed_id = (?1)
-                ",
-            )?;
-            let entries = statement.query_map([&feed.id], |row| {
+            let entries = statement_youtube_entry.query_map([&feed.id], |row| {
                 Ok(Entry {
                     id: row.get(0)?,
                     title: row.get(1)?,
@@ -408,7 +416,7 @@ pub fn get_soundcloud_feeds_from_db(
     account_ids: Vec<&str>,
 ) -> Result<Vec<SoundcloudFeed>> {
     let mut feeds: Vec<SoundcloudFeed> = vec![];
-    let mut statement = connection.prepare(
+    let mut statement_channel = connection.prepare(
         "
             SELECT
                 username,
@@ -419,38 +427,72 @@ pub fn get_soundcloud_feeds_from_db(
                 id = (?1)
         ",
     )?;
+    let mut statement_pfp = connection.prepare(
+        "
+            SELECT
+                url
+            FROM
+                channel_images
+            WHERE
+                channel_id = (?1)
+        ",
+    )?;
+    let mut statement_songs = connection.prepare(
+        "
+            SELECT
+                title,
+                pub_date,
+                link,
+                duration,
+                description,
+                enclosure_url,
+                enclosure_type,
+                image_url
+            FROM
+                songs
+            WHERE
+                channel_id = (?1)
+        ",
+    )?;
     for id in account_ids {
-        let mut rows = statement.query([id])?;
+        let mut rows = statement_channel.query([&id])?;
+        if let Some(row) = rows.next()? {
+            let mut soundcloud_feed = SoundcloudFeed {
+                channel_id: id.to_string(),
+                channel: Channel {
+                    username: row.get(0)?,
+                    description: row.get(1)?,
+                    profile_pictures: vec![],
+                    item: vec![],
+                },
+            };
+            let profile_pictures =
+                statement_pfp.query_map([&id], |row| Ok(ImageElement { url: row.get(0)? }))?;
+            for profile_picture in profile_pictures {
+                soundcloud_feed
+                    .channel
+                    .profile_pictures
+                    .push(profile_picture?);
+            }
+            let songs = statement_songs.query_map([&id], |row| {
+                Ok(Song {
+                    title: row.get(0)?,
+                    pub_date: row.get(1)?,
+                    link: row.get(2)?,
+                    duration: row.get(3)?,
+                    description: row.get(4)?,
+                    enclosure: soundcloud::DataEnclosure {
+                        data_enclosure_type: Some(soundcloud::Type::AudioMpeg),
+                        url: row.get(5)?,
+                    },
+                    image: ImageElement { url: row.get(7)? },
+                })
+            })?;
+            for song in songs {
+                soundcloud_feed.channel.item.push(song?);
+            }
+            feeds.push(soundcloud_feed);
+        }
     }
-    //     -- Table for the feed's channel
-    //     CREATE TABLE IF NOT EXISTS channels (
-    //         id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //         username TEXT NOT NULL,
-    //         description TEXT NOT NULL
-    //     );
-
-    //     -- Table for profile images of a channel (can have multiple)
-    //     CREATE TABLE IF NOT EXISTS channel_images (
-    //         id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //         channel_id INTEGER NOT NULL,
-    //         url TEXT,
-    //         FOREIGN KEY (channel_id) REFERENCES channels(id)
-    //     );
-
-    //     -- Table for songs/items
-    //     CREATE TABLE IF NOT EXISTS songs (
-    //         id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //         channel_id INTEGER NOT NULL,
-    //         title TEXT NOT NULL,
-    //         pub_date TEXT NOT NULL,
-    //         link TEXT NOT NULL,
-    //         duration TEXT NOT NULL,
-    //         description TEXT NOT NULL,
-    //         enclosure_url TEXT NOT NULL,
-    //         enclosure_type TEXT,
-    //         image_url TEXT,
-    //         FOREIGN KEY (channel_id) REFERENCES channels(id)
-    //     );
-    // ";
     Ok(feeds)
 }

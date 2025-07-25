@@ -6,6 +6,9 @@ const RSS_URL: &str = "https://feeds.soundcloud.com/users/soundcloud:users:$$ID$
 
 #[derive(Default, Debug, Serialize, Deserialize)]
 pub struct SoundcloudFeed {
+    #[serde(skip_serializing, skip_deserializing)]
+    pub channel_id: String,
+
     #[serde(rename = "channel")]
     pub channel: Channel,
 }
@@ -75,6 +78,9 @@ impl SoundcloudFeed {
     pub async fn get_content_from_id(id: &str, client: &Client) -> Result<SoundcloudFeed> {
         let url = RSS_URL.replace("$$ID$$", id);
         let response = client.get(&url).send().await?.text().await?;
-        serde_xml_rs::from_str::<SoundcloudFeed>(&response).map_err(|_| anyhow!("xml skill issue"))
+        let mut response = serde_xml_rs::from_str::<SoundcloudFeed>(&response)
+            .map_err(|_| anyhow!("xml skill issue"))?;
+        response.channel_id = id.to_string();
+        Ok(response)
     }
 }
