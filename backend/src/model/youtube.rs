@@ -44,6 +44,27 @@ pub struct Entry {
 pub struct MediaGroup {
     #[serde(rename = "thumbnail", alias = "media:thumbnail")]
     pub media_thumbnail: MediaThumbnail,
+
+    #[serde(rename = "community", alias = "media:community")]
+    pub media_community: MediaCommunity,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MediaCommunity {
+    #[serde(rename = "starRating", alias = "media:starRating")]
+    pub star_rating: StarRating,
+
+    #[serde(rename = "statistics", alias = "media:statistics")]
+    pub statistics: Statistics,
+}
+#[derive(Debug, Deserialize, Serialize)]
+pub struct StarRating {
+    pub count: u32,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Statistics {
+    pub views: u64,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

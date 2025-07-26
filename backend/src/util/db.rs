@@ -1,5 +1,5 @@
 use crate::model::soundcloud::{Channel, ImageElement, Song, SoundcloudFeed};
-use crate::model::youtube::{Author, MediaGroup};
+use crate::model::youtube::{Author, MediaCommunity, MediaGroup, StarRating, Statistics};
 use crate::model::youtube::{Entry, YoutubeFeed};
 use crate::model::{soundcloud, youtube::MediaThumbnail};
 use anyhow::Result;
@@ -27,6 +27,8 @@ pub fn initialize_youtube_db(connection: &Connection) -> Result<()> {
             thumbnail_url TEXT NOT NULL,
             thumbnail_width INTEGER,
             thumbnail_height INTEGER,
+            likes INTEGER,
+            views INTEGER,
             FOREIGN KEY(feed_id) REFERENCES youtube_feed(id) ON DELETE CASCADE
         );
     ";
@@ -50,9 +52,10 @@ pub fn insert_youtube_feed(connection: &Connection, feed: &YoutubeFeed) -> Resul
                 id, feed_id, title,
                 author_name, author_uri,
                 published, updated,
-                thumbnail_url, thumbnail_width, thumbnail_height
+                thumbnail_url, thumbnail_width, thumbnail_height,
+                likes, views
              )
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
             params![
                 entry.id,
                 feed.id,
@@ -64,6 +67,8 @@ pub fn insert_youtube_feed(connection: &Connection, feed: &YoutubeFeed) -> Resul
                 entry.media_group.media_thumbnail.url,
                 entry.media_group.media_thumbnail.width,
                 entry.media_group.media_thumbnail.height,
+                entry.media_group.media_community.star_rating.count,
+                entry.media_group.media_community.statistics.views,
             ],
         )?;
     }
@@ -363,7 +368,9 @@ pub fn get_youtube_feeds_from_db(
             updated,
             thumbnail_url,
             thumbnail_width,
-            thumbnail_height
+            thumbnail_height,
+            likes,
+            views
         FROM
             youtube_entry
         WHERE
@@ -398,6 +405,12 @@ pub fn get_youtube_feeds_from_db(
                             url: row.get(6)?,
                             width: row.get(7)?,
                             height: row.get(8)?,
+                        },
+                        media_community: MediaCommunity {
+                            star_rating: StarRating { count: row.get(9)? },
+                            statistics: Statistics {
+                                views: row.get(10)?,
+                            },
                         },
                     },
                 })
