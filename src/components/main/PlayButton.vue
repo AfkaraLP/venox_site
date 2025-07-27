@@ -19,7 +19,7 @@
 defineProps({
   size: { type: Number, default: 44 },
   color: { type: String, default: '#fff' },
-  bgColor: { type: String, default: '#7e5c3e' }, // Minecraft brown
+  bgColor: { type: String, default: 'rgba(var(--vnx-fg), 0.5)' }, // Minecraft brown
   ariaLabel: { type: String, default: 'Play' }
 })
 </script>
@@ -30,22 +30,22 @@ defineProps({
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 4px double #222;
-  border-radius: 0;
   cursor: pointer;
-  box-shadow: 0 4px 0 #4e2e13;
   transition: background 0.2s, color 0.2s;
   z-index: 2;
-  image-rendering: pixelated;
-  font-family: var(--font-mc);
-  font-weight: bold;
+  font-family: var(--font-vnx);
   user-select: none;
+  border-radius: 8px;
+  border: 2px solid #fff2;
+  outline: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .mc-play-btn:hover {
-  background: #4e2e13 !important;
-  color: #6aac4b !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.2), 0 0 4px rgba(255, 255, 255, 0.1) inset;
+  transform: translate(-50%, -50%) scale(1.05);
 }
 </style> 

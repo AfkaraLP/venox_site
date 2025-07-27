@@ -1,45 +1,31 @@
 /* --- Minecraft Theme Revamp --- */
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap');
 
 :root {
-  --mc-green: #6aac4b;
-  --mc-brown: #7e5c3e;
-  --mc-brown-dark: #4e2e13;
-  --mc-gray: #bcbcbc;
-  --mc-sky: #6ec6f7;
-  --mc-white: #f3f3f3;
-  --mc-shadow: 0 4px 0 #4e2e13, 0 8px 0 #bcbcbc;
-  --mc-border: 4px solid #222;
-  --mc-radius: 0px;
-  --font-mc: 'Press Start 2P', 'Arial', monospace;
+  --vnx-black: 34, 34, 34;
+  --vnx-white: 232, 232, 232;
+  --vnx-pink: 213, 127, 154;
+  --vnx-highlight: 243, 145, 160;
+  --vnx-bg: 21, 21, 21;
+  --vnx-fg: 44, 44, 44;
+  --vnx-error: 187, 68, 48;
+  --font-vnx: 'Funnel Display', 'sans-serif', normal; 
 }
 
 /* 2. Download a Minecraft grass or dirt block texture and place it as src/assets/images/minecraft_grass.png */
 body {
-  background: url('/src/assets/images/minecraft_grass.png') repeat, var(--mc-sky);
-  font-family: var(--font-mc);
-  color: #222;
+  background: rgb(var(--vnx-black));
+  font-family: var(--font-vnx);
+  color: rgb(var(--vnx-black));
   margin: 0;
   min-height: 100vh;
   position: relative;
-  image-rendering: pixelated;
-  cursor: crosshair;
 }
 
 body::after {
   content: none;
-}
-
-body::before {
-  /* Pixelated checkerboard overlay for extra Minecraft feel */
-  content: '';
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.12;
-  background: repeating-linear-gradient(45deg, #fff2 0 8px, transparent 8px 16px), repeating-linear-gradient(-45deg, #0002 0 8px, transparent 8px 16px);
 }
 
 main {
@@ -54,11 +40,7 @@ main {
   padding: 2.5rem 2.5rem 1.5rem 2.5rem;
   position: relative;
   z-index: 1;
-  background: #fff9;
-  border-radius: var(--mc-radius);
-  box-shadow: var(--mc-shadow);
-  border: 6px double #222;
-  image-rendering: pixelated;
+  background: rgb(var(--vnx-bg));
 }
 
 @media (max-width: 900px) {
@@ -69,17 +51,12 @@ main {
 }
 
 footer {
-  background: var(--mc-brown);
-  border-top: 6px double #222;
+  background: rgb(var(--vnx-black));
   text-align: center;
   padding: 2rem 0 1.2rem 0;
   font-size: 1.1rem;
-  color: var(--mc-white);
-  border-radius: var(--mc-radius);
-  box-shadow: 0 -8px 0 #4e2e13;
-  font-family: var(--font-mc);
-  letter-spacing: 1px;
-  image-rendering: pixelated;
+  color: rgb(var(--vnx-white));
+  font-family: var(--font-vnx);
 }
 
 .footer-content {
@@ -97,84 +74,41 @@ footer {
 }
 .social-link {
   font-size: 1.1rem;
-  color: var(--mc-white);
+  color: rgb(var(--vnx-white));
   text-decoration: none;
-  background: var(--mc-brown-dark);
   padding: 0.4rem 1rem;
-  border-radius: var(--mc-radius);
-  box-shadow: 0 4px 0 #4e2e13;
-  border: 4px dashed #222;
   transition: background 0.2s, color 0.2s, transform 0.15s;
+  filter: invert(0.8);
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  image-rendering: pixelated;
 }
 .social-link:hover {
-  background: var(--mc-green);
-  color: #222;
   transform: scale(1.05) rotate(-1deg);
-  box-shadow: 0 8px 0 #4e2e13;
 }
 
 h1, h2, h3, h4, h5 {
-  font-family: var(--font-mc);
-  color: var(--mc-green);
-  letter-spacing: 0.02em;
-  text-shadow: 2px 2px 0 #222, 4px 4px 0 #bcbcbc, 0 0 6px #fff8;
-  text-transform: uppercase;
+  font-family: var(--font-vnx);
+  text-transform: capital;
   font-weight: bold;
-  outline: 2px solid #fff8;
-  outline-offset: 2px;
-  filter: drop-shadow(0 0 2px #fff8);
 }
 
 /* Card/Section Styles */
 section, .card, .video-card, .music-section {
-  background: #e3e3e3cc;
-  border-radius: var(--mc-radius);
-  border: 6px double #222;
-  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
   padding: 1.5rem 1.2rem;
   margin-bottom: 2rem;
-  image-rendering: pixelated;
-}
-
-/* Buttons */
-button, .btn {
-  font-family: var(--font-mc);
-  background: var(--mc-green);
-  color: #fff;
-  border: 6px double #222;
-  border-radius: var(--mc-radius);
-  padding: 0.6rem 1.5rem;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 0 #4e2e13;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, transform 0.15s;
-  text-shadow: 2px 2px 0 #222, 0 0 4px #fff8;
-  image-rendering: pixelated;
-}
-button:hover, .btn:hover {
-  background: var(--mc-brown);
-  color: var(--mc-white);
-  transform: scale(1.04);
 }
 
 /* Error message */
 .error {
-  color: #b00;
-  background: #fff3;
-  border: 4px dashed #222;
-  border-radius: var(--mc-radius);
+  color: rgb(var(--vnx-error));
+  background: #fcc6;
+  border-left: 4px solid;
+  border-radius: 0px 6px 6px 0px;
   padding: 1rem 1.5rem;
   margin: 1.5rem auto;
   max-width: 500px;
-  font-family: var(--font-mc);
-  box-shadow: 0 4px 0 #4e2e13;
-  image-rendering: pixelated;
-}
-
-img, .pixel-img {
-  image-rendering: pixelated !important;
+  font-family: var(--font-vnx);
+  font-size: 1.6rem;
+  font-weight: bold;
 }

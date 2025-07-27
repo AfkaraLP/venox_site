@@ -73,7 +73,7 @@ onMounted(async () => {
       :loading="videoGridLoading"
       :key="featuredVideo?.id || 'skeleton'"
     />
-    <div v-if="featuredVideoError" class="error" style="text-align:center; color:#b00; margin:2rem 0;">
+    <div v-if="featuredVideoError" class="error" >
       {{ featuredVideoError }}
     </div>
     <div id="videos">

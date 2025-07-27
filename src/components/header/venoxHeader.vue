@@ -3,15 +3,13 @@
     <div class="logo-container-mc">
       <a href="/">
         <span class="sr-only">Venox Home</span>
-        <!-- <span class="logo-svg-mc" v-html="logoSvg"></span> -->
+        <span class="site-title"><span class="site-title-pink">Lil</span>Venox</span>
       </a>
-      <span class="site-title-mc">LILVENOX</span>
     </div>
-    <nav class="main-nav-mc">
-      <a href="#music" class="nav-link-mc">Music</a>
-      <a href="#videos" class="nav-link-mc">Videos</a>
-      <!-- <a href="#art" class="nav-link-mc">Art</a> -->
-      <a href="#footer" class="nav-link-mc">Contact</a>
+    <nav class="main-nav">
+      <a href="#music" class="nav-link">Music</a>
+      <a href="#videos" class="nav-link">Videos</a>
+      <a href="#footer" class="nav-link">Contact</a>
     </nav>
   </header>
 </template>
@@ -21,70 +19,57 @@
 </script>
 
 <style scoped>
+a[href="/"] {
+  text-decoration: none;
+}
+
 .venox-header-mc {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem 2.5rem 1.2rem 2.5rem;
-  background: url('/src/assets/images/minecraft_grass.png') repeat, #6aac4b;
-  border-bottom: 6px double #222;
-  border-top: 6px double #222;
-  box-shadow: 0 8px 0 #4e2e13;
-  border-radius: 0;
+  background: rgba(var(--vnx-black), 0.4);
   position: sticky;
   top: 0;
   z-index: 10;
-  image-rendering: pixelated;
+  backdrop-filter: blur(8px);
 }
 .logo-container-mc {
   display: flex;
   align-items: center;
   gap: 1.1rem;
 }
-.logo-svg-mc {
-  display: inline-block;
-  vertical-align: middle;
-  width: 38px;
-  height: 38px;
-  image-rendering: pixelated;
-}
-.site-title-mc {
-  font-family: var(--font-mc);
-  font-size: 2.2rem;
-  color: #222;
+.site-title {
+  position: relative;
+  font-family: var(--font-vnx);
+  font-size: 2.7rem;
+  color: rgb(var(--vnx-black));
   font-weight: bold;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-shadow: 2px 2px 0 #fff, 4px 4px 0 #4e2e13;
-  outline: 2px solid #fff8;
-  outline-offset: 2px;
-  filter: drop-shadow(0 0 2px #fff8);
+  -webkit-text-stroke: 4px rgba(var(--vnx-fg), 1);
+  letter-spacing: 0.220rem;
 }
-.main-nav-mc {
+
+.site-title-pink {
+  color: rgb(var(--vnx-pink));
+}
+
+.main-nav {
   display: flex;
   gap: 2.2rem;
 }
-.nav-link-mc {
-  font-family: var(--font-mc);
+.nav-link {
+  font-family: var(--font-vnx);
   color: #fff;
-  background: #4e2e13;
   font-size: 1.15rem;
   text-decoration: none;
   font-weight: bold;
-  text-transform: uppercase;
-  border: 4px double #222;
-  border-radius: 0;
-  padding: 0.3rem 1.1rem;
-  box-shadow: 0 4px 0 #222;
+  text-transform: capital;
   transition: background 0.2s, color 0.2s, transform 0.15s;
   letter-spacing: 1px;
   image-rendering: pixelated;
 }
-.nav-link-mc:hover {
-  background: #6aac4b;
-  color: #222;
+.nav-link:hover {
   transform: scale(1.07) rotate(-2deg);
-  box-shadow: 0 8px 0 #4e2e13;
 }
 .sr-only {
   position: absolute;
@@ -102,11 +87,11 @@
     align-items: flex-start;
     padding: 1rem 1.2rem;
   }
-  .main-nav-mc {
+  .main-nav {
     gap: 1.1rem;
     margin-top: 0.7rem;
   }
-  .site-title-mc {
+  .site-title {
     font-size: 1.3rem;
   }
 }

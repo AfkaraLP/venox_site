@@ -84,8 +84,8 @@ watch(() => props.src, () => {
       @click="playing ? pause() : play()"
       :aria-label="playing ? 'Pause' : 'Play'"
     >
-      <span v-if="playing">⏸️</span>
-      <span v-else>▶️</span>
+      <span v-if="playing">⏹</span>
+      <span v-else>▶</span>
     </button>
     <input
       class="audio-progress"
@@ -109,50 +109,33 @@ watch(() => props.src, () => {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  background: #e3e3e3cc;
-  border: 6px double #222;
-  border-radius: 0;
   padding: 0.7rem 1.1rem;
   min-width: 0;
   width: 100%;
   box-sizing: border-box;
-  font-family: var(--font-mc);
-  image-rendering: pixelated;
-  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
+  font-family: var(--font-vnx);
 }
 .audio-btn {
   flex-shrink: 0;
-  background: #6aac4b;
-  border: 4px double #222;
-  border-radius: 0;
   width: 44px;
   height: 44px;
   font-size: 1.5rem;
   color: #fff;
-  box-shadow: 0 4px 0 #4e2e13;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
-  image-rendering: pixelated;
 }
-.audio-btn:hover {
-  background: #4e2e13;
-  color: #6aac4b;
-}
+.audio-btn:hover {}
+
 .audio-progress {
   flex: 1 1 0%;
   min-width: 0;
-  accent-color: #6aac4b;
   height: 12px;
   border-radius: 0;
-  background: #bcbcbc;
   margin: 0 0.7rem;
   outline: none;
-  border: 4px dashed #222;
-  box-shadow: 0 2px 0 #4e2e13;
-  image-rendering: pixelated;
 }
 .audio-progress::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -160,31 +143,21 @@ watch(() => props.src, () => {
   width: 18px;
   height: 18px;
   border-radius: 0;
-  background: #6aac4b;
-  border: 4px double #222;
-  box-shadow: 0 2px 0 #4e2e13;
   cursor: pointer;
   transition: background 0.2s;
-  image-rendering: pixelated;
 }
 .audio-progress:focus::-webkit-slider-thumb {
-  background: #4e2e13;
 }
 .audio-progress::-webkit-slider-runnable-track {
   height: 12px;
   border-radius: 0;
-  background: #bcbcbc;
 }
 .audio-progress::-moz-range-thumb {
   width: 18px;
   height: 18px;
   border-radius: 0;
-  background: #6aac4b;
-  border: 4px double #222;
-  box-shadow: 0 2px 0 #4e2e13;
   cursor: pointer;
   transition: background 0.2s;
-  image-rendering: pixelated;
 }
 .audio-progress:focus::-moz-range-thumb {
   background: #4e2e13;
@@ -193,12 +166,8 @@ watch(() => props.src, () => {
   width: 18px;
   height: 18px;
   border-radius: 0;
-  background: #6aac4b;
-  border: 4px double #222;
-  box-shadow: 0 2px 0 #4e2e13;
   cursor: pointer;
   transition: background 0.2s;
-  image-rendering: pixelated;
 }
 .audio-progress:focus::-ms-thumb {
   background: #4e2e13;
@@ -214,19 +183,16 @@ watch(() => props.src, () => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: var(--font-mc);
-  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
+  font-family: var(--font-vnx);
 }
 .audio-time-sep {
   margin: 0 0.2em;
-  color: #4e2e13;
   font-weight: bold;
 }
 .track-title {
   color: #4e2e13;
   font-weight: bold;
-  font-family: var(--font-mc);
-  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
+  font-family: var(--font-vnx);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -235,8 +201,5 @@ watch(() => props.src, () => {
   height: 48px;
   border-radius: 0;
   object-fit: cover;
-  box-shadow: 0 4px 0 #4e2e13;
-  border: 4px double #222;
-  image-rendering: pixelated;
 }
 </style> 

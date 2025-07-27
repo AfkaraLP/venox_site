@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
             <div class="video-embed">
               <template v-if="playingIndexes[channelIdx] !== idx">
                 <img :src="getThumbnailUrl(video.id)" :alt="video.title" />
-                <PlayButton :size="54" color="#fff" bgColor="#6aac4b" @click="playVideo(channelIdx, idx)" />
+                <PlayButton :size="54" @click="playVideo(channelIdx, idx)" />
               </template>
               <template v-else>
                 <iframe
@@ -177,42 +177,36 @@ onBeforeUnmount(() => {
   margin: 2rem 0;
 }
 .video-grid h2 {
-  color: #4e2e13;
+  color: rgb(var(--vnx-black));
   margin-bottom: 1rem;
   text-align: left;
-  font-family: var(--font-mc);
-  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
-  letter-spacing: 1px;
+  font-family: var(--font-vnx);
   font-size: 2rem;
 }
 .channel-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 4px dashed #4e2e13;
 }
 .channel-header {
   margin-bottom: 1.2rem;
 }
 .channel-title {
   font-size: 1.35rem;
-  color: #4e2e13;
+  color: rgb(var(--vnx-white));
   font-weight: bold;
   margin-bottom: 0.3rem;
-  font-family: var(--font-mc);
-  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
-  text-transform: uppercase;
+  font-family: var(--font-vnx);
+  text-transform: capital;
 }
 .channel-title a {
-  color: #4e2e13;
+  color: rgb(var(--vnx-white));
   text-decoration: none;
   transition: color 0.2s;
 }
 .channel-title a:hover {
-  color: #6aac4b;
   text-decoration: underline;
 }
 .channel-desc {
-  color: #4e2e13;
   font-size: 1.05rem;
   margin-bottom: 0.2rem;
   font-family: var(--font-mc);
@@ -227,111 +221,77 @@ onBeforeUnmount(() => {
   max-width: 100vw;
   min-width: 0;
   scrollbar-width: thin;
-  scrollbar-color: #bcbcbc #e3e3e3;
-  background: #bcbcbc;
-  border: 4px dashed #222;
-  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
 }
 .side-scroll-grid:hover {
-  scrollbar-color: #6aac4b #bcbcbc;
+  scrollbar-color: #0000;
 }
 .side-scroll-grid::-webkit-scrollbar {
   height: 12px;
 }
 .side-scroll-grid::-webkit-scrollbar-thumb {
-  background: #bcbcbc;
+  background: #0000;
   border-radius: 0;
 }
 .side-scroll-grid:hover::-webkit-scrollbar-thumb {
-  background: #6aac4b;
+  background: #0000;
 }
 .side-scroll-grid::-webkit-scrollbar-track {
-  background: #e3e3e3;
   border-radius: 0;
 }
 .video-card {
-  background: #e3e3e3cc;
+  margin-top: 2rem;
   border-radius: 0;
-  border: 6px double #222;
-  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
   overflow: hidden;
   width: 320px;
   max-width: 90vw;
   text-align: center;
   transition: transform 0.15s;
   flex: 0 0 320px;
-  font-family: var(--font-mc);
-  image-rendering: pixelated;
+  padding-top: 2.7rem;
+  background: rgb(var(--vnx-fg));
+  border-radius: 12px;
+  border-top: 4px solid rgb(var(--vnx-pink));
+  border-bottom: 4px solid rgb(var(--vnx-black));
+  font-family: var(--font-vnx);
+  transition: transform 0.4s ease;
 }
 .video-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 12px 0 #4e2e13, 0 16px 0 #bcbcbc;
+  transform: translateY(-10%);
 }
 .video-card img {
   width: 100%;
   display: block;
-  image-rendering: pixelated;
 }
 .video-embed {
   width: 100%;
   aspect-ratio: 16/9;
   margin-bottom: 0.5rem;
-  border-radius: 0;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 0 #4e2e13;
   position: relative;
   background: #000;
   display: block;
-  border: 4px dashed #222;
 }
 .video-iframe {
   width: 100%;
   height: 100%;
-  border: none;
   display: block;
   aspect-ratio: 16/9;
   background: #000;
 }
-.play-btn {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: #6aac4b;
-  border: 4px double #222;
-  border-radius: 0;
-  font-size: 2.2rem;
-  color: #fff;
-  width: 54px;
-  height: 54px;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #4e2e13;
-  transition: background 0.2s;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  image-rendering: pixelated;
-}
-.play-btn:hover {
-  background: #4e2e13;
-  color: #6aac4b;
-}
+
 .video-title {
   display: block;
   padding: 0.5rem 0;
-  color: #4e2e13;
+  color: rgb(var(--vnx-white));
   font-weight: bold;
   text-decoration: none;
   transition: color 0.2s;
-  text-align: center;
+  text-align: left;
   font-family: var(--font-mc);
-  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
-  text-transform: uppercase;
   letter-spacing: 1px;
 }
 .video-title:hover {
-  color: #6aac4b;
   text-decoration: underline;
 }
 .skeleton-thumb {
@@ -364,6 +324,5 @@ onBeforeUnmount(() => {
   height: 100%;
   object-fit: cover;
   display: block;
-  image-rendering: pixelated;
 }
 </style> 

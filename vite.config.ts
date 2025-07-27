@@ -11,17 +11,20 @@ export default defineConfig({
     vueDevTools(),
   ],
   server: {
-    host: true, // Listen on all interfaces for remote access
+    watch: {
+      usePolling: true
+    },
+    host: true,
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:9999',
+        target: 'https://lilvenox.afkara.dev/api/',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }
     },
     hmr: {
-      host: 'lilvenox.afkara.dev',
+      host: 'localhost',
     },
   },
   resolve: {

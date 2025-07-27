@@ -161,12 +161,9 @@ onBeforeUnmount(() => {
   margin: 2rem 0 3rem 0;
 }
 .music-section h2 {
-  color: #4e2e13;
   margin-bottom: 1.5rem;
   text-align: left;
-  font-family: var(--font-mc);
-  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
-  letter-spacing: 1px;
+  font-family: var(--font-vnx);
   font-size: 2rem;
 }
 .music-list {
@@ -178,16 +175,11 @@ onBeforeUnmount(() => {
   padding-bottom: 1rem;
   width: 100%;
   min-width: 0;
-  border: 4px dashed #4e2e13;
   scroll-behavior: smooth;
-  background: #bcbcbc;
-  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
 }
 .music-track {
-  background: #e3e3e3cc;
-  border-radius: 0;
-  border: 6px double #222;
-  box-shadow: 0 8px 0 #4e2e13, 0 12px 0 #bcbcbc;
+  margin-top: 2.7rem;
+  border-radius: 16px;
   padding: 2rem 2.5rem 2.5rem 2.5rem;
   display: flex;
   flex-direction: column;
@@ -202,18 +194,16 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden;
   flex: 0 0 420px;
-  font-family: var(--font-mc);
-  image-rendering: pixelated;
+  font-family: var(--font-vnx);
 }
 .music-track:hover {
-  box-shadow: 0 12px 0 #4e2e13, 0 16px 0 #bcbcbc;
-  transform: translateY(-2px) scale(1.01);
+  transform: translateY(-4%);
 }
 .audio-unavailable {
   color: #aaa;
   font-size: 0.95em;
   margin-right: 1rem;
-  font-family: var(--font-mc);
+  font-family: var(--font-vnx);
 }
 .track-link {
   color: #fff;
@@ -223,17 +213,10 @@ onBeforeUnmount(() => {
   transition: color 0.2s;
   padding: 0.7rem 1.5rem;
   border-radius: 0;
-  background: #4e2e13;
-  box-shadow: 0 4px 0 #222;
-  border: 4px double #222;
-  font-family: var(--font-mc);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  image-rendering: pixelated;
+  font-family: var(--font-vnx);
 }
 .track-link:hover {
   color: #222;
-  background: #6aac4b;
   text-decoration: underline;
 }
 .track-header {
@@ -241,22 +224,16 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2.2rem;
-  background: #bcbcbc;
   border-radius: 0;
   padding: 0.7rem 1.2rem 0.7rem 1.2rem;
-  box-shadow: 0 2px 0 #4e2e13;
-  border: 4px dashed #222;
-  font-family: var(--font-mc);
+  font-family: var(--font-vnx);
 }
 .track-title {
-  color: #4e2e13;
   font-weight: bold;
   font-size: 1.35em;
   margin-right: 0.5rem;
   letter-spacing: 1px;
-  font-family: var(--font-mc);
-  text-shadow: 2px 2px 0 #fff, 0 0 4px #bcbcbc;
-  text-transform: uppercase;
+  font-family: var(--font-vnx);
 }
 .track-player {
   width: 100%;
@@ -267,17 +244,14 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   padding: 0 2.5rem 1.2rem 2.5rem;
-  background: #bcbcbc;
   border-radius: 0;
   box-sizing: border-box;
-  border-top: 4px dashed #222;
 }
 .skeleton-title {
   width: 60%;
   height: 1.5rem;
   border-radius: 0;
   background: #bcbcbc;
-  border: 4px dashed #222;
   animation: skeleton-loading 1.2s infinite linear;
   margin-bottom: 0.5rem;
 }
@@ -294,7 +268,6 @@ onBeforeUnmount(() => {
   height: 2.2rem;
   border-radius: 0;
   background: #bcbcbc;
-  border: 4px dashed #222;
   animation: skeleton-loading 1.2s infinite linear;
 }
 @keyframes skeleton-loading {

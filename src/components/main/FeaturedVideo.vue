@@ -30,7 +30,7 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
       <div class="video-thumb">
         <template v-if="!playing">
           <img :src="props.video.thumbnail" :alt="props.video.title" />
-          <PlayButton :size="80" color="#fff" bgColor="#6aac4b" @click="playVideo" />
+          <PlayButton :size="80" @click="playVideo" />
         </template>
         <template v-else>
           <iframe
@@ -69,19 +69,21 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   position: absolute;
   top: 0.5rem;
   left: 50%;
-  transform: translateX(-50%);
-  background: rgba(40, 30, 80, 0.55);
+  transform: translateX(-50%) translateY(40%);
+  background: #0008;
+  border-radius: 8px;
+  border-left: 4px solid;
+  border-right: 4px solid;
+  border-color: rgb(var(--vnx-pink));
   color: #fff;
   font-size: 1.35rem;
   font-weight: 600;
   padding: 0.7rem 2.2rem;
-  border-radius: 1.2rem;
   z-index: 2;
   max-width: 90vw;
   text-align: center;
-  box-shadow: 0 2px 12px #b5aaff33;
   pointer-events: none;
-  white-space: pre-line;
+  backdrop-filter: blur(8px);
 }
 .video-thumb {
   position: relative;
@@ -138,11 +140,11 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   text-align: center;
 }
 .youtube-link {
-  color: #3a2e8c;
+  color: rgb(var(--vnx-pink));
   font-size: 1.25rem;
   font-weight: bold;
   text-decoration: none;
-  background: #f3eaff;
+  background: rgb(var(--vnx-black));
   padding: 0.7rem 2.2rem;
   border-radius: 1.2rem;
   box-shadow: 0 2px 8px #b5aaff22;
@@ -151,8 +153,8 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   margin: 0 auto;
 }
 .youtube-link:hover {
-  background: #e0c3fc;
-  color: #5a4fcf;
+  background: rgb(var(--vnx-fg));
+  color: rgb(var(--vnx-highlight));
   text-decoration: underline;
 }
 /* Skeleton Loader Styles */
