@@ -29,6 +29,7 @@ const sectionRef = ref<HTMLElement | null>(null)
 
 // Track if mouse is over the very top section
 let mouseOverTopSection = false
+let mouseOverMusicSection = false
 
 function getAudioUrl(track: Song): string | undefined {
   return track.enclosure?.url || track.data_enclosure?.url
@@ -68,6 +69,7 @@ function isFooterMostlyInView() {
 
 function handleGlobalWheel(e: WheelEvent) {
   if (mouseOverTopSection) return
+  if (!mouseOverMusicSection) return
   if (!isMusicSectionInView()) return
   if (!isFooterMostlyInView()) return
   const el = musicListRef.value
@@ -114,7 +116,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="music-section" ref="sectionRef">
+  <section class="music-section" ref="sectionRef" @mouseenter="mouseOverMusicSection = true" @mouseleave="mouseOverMusicSection = false">
     <h2>Music</h2>
     <div v-if="loading">
       <div class="music-list">

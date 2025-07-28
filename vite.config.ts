@@ -18,7 +18,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:9999',
+        target: 'https://lilvenox.afkara.dev/api/',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }
