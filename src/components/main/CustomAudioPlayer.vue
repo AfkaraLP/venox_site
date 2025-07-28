@@ -112,6 +112,7 @@ watch(() => props.src, () => {
   font-family: var(--font-vnx);
 }
 .audio-btn {
+  font: var(--font-vnx);
   background: rgb(var(--vnx-mg));
   width: 44px;
   height: 44px;
