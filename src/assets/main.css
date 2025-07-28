@@ -1,31 +1,24 @@
-/* --- Minecraft Theme Revamp --- */
-
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&display=swap');
 
 :root {
-  --vnx-black: 34, 34, 34;
-  --vnx-white: 232, 232, 232;
-  --vnx-pink: 213, 127, 154;
-  --vnx-highlight: 243, 145, 160;
-  --vnx-bg: 21, 21, 21;
-  --vnx-fg: 44, 44, 44;
-  --vnx-error: 187, 68, 48;
+  --vnx-black: 34, 34, 34; /* 34, 34, 34; */
+  --vnx-white: 232, 232, 232; /* 232, 232, 232; */
+  --vnx-pink: 213, 127, 154; /* 213, 127, 154; */
+  --vnx-highlight: 243, 145, 160; /* 243, 145, 160; */
+  --vnx-bg: 18, 18, 18; /* 18, 18, 18; */
+  --vnx-mg: 23, 23, 23; /* 21, 21, 21; */
+  --vnx-fg: 44, 44, 44; /* 44, 44, 44; */
+  --vnx-error: 187, 68, 48; /* 187, 68, 48; */
   --font-vnx: 'Funnel Display', 'sans-serif', normal; 
 }
 
-/* 2. Download a Minecraft grass or dirt block texture and place it as src/assets/images/minecraft_grass.png */
 body {
-  background: rgb(var(--vnx-black));
+  background: rgb(var(--vnx-bg));
   font-family: var(--font-vnx);
   color: rgb(var(--vnx-black));
   margin: 0;
   min-height: 100vh;
   position: relative;
-}
-
-body::after {
-  content: none;
 }
 
 main {
@@ -39,8 +32,9 @@ main {
   margin: 0 auto;
   padding: 2.5rem 2.5rem 1.5rem 2.5rem;
   position: relative;
+  border-radius: 16px;
   z-index: 1;
-  background: rgb(var(--vnx-bg));
+  background: rgb(var(--vnx-mg));
 }
 
 @media (max-width: 900px) {
@@ -72,12 +66,13 @@ footer {
   justify-content: center;
   margin-bottom: 0.5rem;
 }
+
 .social-link {
   font-size: 1.1rem;
   color: rgb(var(--vnx-white));
   text-decoration: none;
   padding: 0.4rem 1rem;
-  transition: background 0.2s, color 0.2s, transform 0.15s;
+  transition: transform 0.15s;
   filter: invert(0.8);
   display: flex;
   align-items: center;
@@ -89,14 +84,12 @@ footer {
 
 h1, h2, h3, h4, h5 {
   font-family: var(--font-vnx);
-  text-transform: capital;
   font-weight: bold;
 }
 
 /* Card/Section Styles */
 section, .card, .video-card, .music-section {
   padding: 1.5rem 1.2rem;
-  margin-bottom: 2rem;
 }
 
 /* Error message */

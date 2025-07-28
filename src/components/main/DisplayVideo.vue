@@ -15,7 +15,6 @@ const options = {
 };
 
 const videos = await youtube.search("PiccoloVenox", options);
-console.log(videos);
 
 </script>
 

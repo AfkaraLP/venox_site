@@ -67,8 +67,6 @@ watch(() => props.src, () => {
 
 <template>
   <div class="custom-audio-player">
-    <img v-if="props.cover" :src="props.cover" alt="cover" class="track-cover" />
-    <span v-if="props.title" class="track-title">{{ props.title }}</span>
     <audio
       ref="audioRef"
       :src="props.src"
@@ -109,14 +107,12 @@ watch(() => props.src, () => {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.7rem 1.1rem;
-  min-width: 0;
+  min-width: 100px;
   width: 100%;
-  box-sizing: border-box;
   font-family: var(--font-vnx);
 }
 .audio-btn {
-  flex-shrink: 0;
+  background: rgb(var(--vnx-mg));
   width: 44px;
   height: 44px;
   font-size: 1.5rem;
@@ -126,23 +122,26 @@ watch(() => props.src, () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  border-radius: 16px;
 }
-.audio-btn:hover {}
+.audio-btn:hover {
+  background: rgb(var(--vnx-pink));
+}
 
 .audio-progress {
   flex: 1 1 0%;
   min-width: 0;
   height: 12px;
-  border-radius: 0;
-  margin: 0 0.7rem;
-  outline: none;
+  background: rgb(var(--vnx-mg));
+  border-radius: 16px;
 }
 .audio-progress::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 18px;
   height: 18px;
-  border-radius: 0;
+  border-radius: 16px;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -150,32 +149,35 @@ watch(() => props.src, () => {
 }
 .audio-progress::-webkit-slider-runnable-track {
   height: 12px;
-  border-radius: 0;
+  border-radius: 16px;
 }
 .audio-progress::-moz-range-thumb {
   width: 18px;
   height: 18px;
-  border-radius: 0;
+  border-radius: 16px;
   cursor: pointer;
   transition: background 0.2s;
+  background: rgb(var(--vnx-pink));
+  border: none;
 }
 .audio-progress:focus::-moz-range-thumb {
-  background: #4e2e13;
+  background: rgb(var(--vnx-highlight));
 }
 .audio-progress::-ms-thumb {
+  background: rgb(var(--vnx-pink));
   width: 18px;
   height: 18px;
-  border-radius: 0;
   cursor: pointer;
   transition: background 0.2s;
+  border: none;
 }
 .audio-progress:focus::-ms-thumb {
-  background: #4e2e13;
+  background: rgb(var(--vnx-highlight));
 }
 .audio-time {
+  color: rgb(var(--vnx-pink));
   flex-shrink: 0;
   min-width: 60px;
-  color: #4e2e13;
   font-size: 0.8em;
   text-align: right;
   margin-left: 0.5rem;
@@ -186,20 +188,7 @@ watch(() => props.src, () => {
   font-family: var(--font-vnx);
 }
 .audio-time-sep {
-  margin: 0 0.2em;
   font-weight: bold;
-}
-.track-title {
-  color: #4e2e13;
-  font-weight: bold;
-  font-family: var(--font-vnx);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.track-cover {
-  width: 48px;
-  height: 48px;
-  border-radius: 0;
-  object-fit: cover;
+  color: rgba(var(--vnx-pink), 0.7);
 }
 </style> 

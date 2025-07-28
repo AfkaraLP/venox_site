@@ -6,6 +6,7 @@ interface VideoEntry {
   id: string
   title: string
   published: string
+  group: Group
   [key: string]: any
 }
 
@@ -39,10 +40,6 @@ function setScrollRef(idx: number, el: HTMLElement | null) {
 
 function getYoutubeId(entryId: string) {
   return entryId.split(':').pop() || ''
-}
-function getThumbnailUrl(entryId: string) {
-  const vid = getYoutubeId(entryId)
-  return `https://img.youtube.com/vi/${vid}/hqdefault.jpg`
 }
 function getYoutubeUrl(entryId: string) {
   const vid = getYoutubeId(entryId)
@@ -150,7 +147,7 @@ onBeforeUnmount(() => {
           <div class="video-card" v-for="(video, idx) in feed.entry" :key="video.id">
             <div class="video-embed">
               <template v-if="playingIndexes[channelIdx] !== idx">
-                <img :src="getThumbnailUrl(video.id)" :alt="video.title" />
+                <img :src="video.group.thumbnail.url" :alt="video.title" />
                 <PlayButton :size="54" @click="playVideo(channelIdx, idx)" />
               </template>
               <template v-else>
@@ -165,6 +162,14 @@ onBeforeUnmount(() => {
               </template>
             </div>
             <a :href="getYoutubeUrl(video.id)" class="video-title" target="_blank" rel="noopener noreferrer">{{ video.title }}</a>
+            <div class="video-stats">
+              <span v-if="video.group.community.starRating.count">
+                 {{video.group.community.starRating.count}} like<span v-if="video.group.community.starRating.count > 1">s</span>
+              </span>
+              <span v-if="video.group.community.statistics.views">
+                {{video.group.community.statistics.views}} view<span v-if="video.group.community.statistics.views > 1">s</span>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -174,37 +179,47 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .video-grid {
-  margin: 2rem 0;
+  margin: 0 0 2rem 0;
 }
 .video-grid h2 {
-  color: rgb(var(--vnx-black));
-  margin-bottom: 1rem;
-  text-align: left;
+  color: rgb(var(--vnx-pink));
   font-family: var(--font-vnx);
-  font-size: 2rem;
+  text-align: left;
+  font-size: 3rem;
 }
 .channel-section {
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
 }
 .channel-header {
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.2rem;
 }
 .channel-title {
   font-size: 1.35rem;
   color: rgb(var(--vnx-white));
   font-weight: bold;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.1rem;
   font-family: var(--font-vnx);
   text-transform: capital;
 }
 .channel-title a {
+  background: -webkit-linear-gradient(
+    0deg,
+    rgb(var(--vnx-pink)) 50%,
+    rgb(var(--vnx-fg)) 50%
+  );
+  background-position: 100% 100%;
+  background-size: 200% 100%;
+  padding: 0.1rem 1.7rem 0.1rem 0.3rem;
+  border-left: 2px solid rgb(var(--vnx-pink));
   color: rgb(var(--vnx-white));
   text-decoration: none;
-  transition: color 0.2s;
+  text-align: left;
+  transition: text-decoration 0.2s, background-position 0.2s;
 }
 .channel-title a:hover {
   text-decoration: underline;
+  background-position: 0% 0%;
 }
 .channel-desc {
   font-size: 1.05rem;
@@ -239,7 +254,8 @@ onBeforeUnmount(() => {
   border-radius: 0;
 }
 .video-card {
-  margin-top: 2rem;
+  position: relative;
+  margin-top: 2.8rem;
   border-radius: 0;
   overflow: hidden;
   width: 320px;
@@ -282,6 +298,7 @@ onBeforeUnmount(() => {
 
 .video-title {
   display: block;
+  margin-bottom: 1.0rem;
   padding: 0.5rem 0;
   color: rgb(var(--vnx-white));
   font-weight: bold;
@@ -325,4 +342,17 @@ onBeforeUnmount(() => {
   object-fit: cover;
   display: block;
 }
+
+.video-stats {
+  color: rgba(var(--vnx-white), 0.8);
+  font-weight: bold;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 1rem 0 1rem 0;
+}
+
 </style> 

@@ -24,9 +24,6 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
 <template>
   <section class="featured-video">
     <template v-if="!showSkeleton">
-      <div class="video-title-overlay" v-if="!playing">
-        {{ props.video.title }}
-      </div>
       <div class="video-thumb">
         <template v-if="!playing">
           <img :src="props.video.thumbnail" :alt="props.video.title" />
@@ -44,7 +41,12 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
         </template>
       </div>
       <div class="video-info">
-        <a :href="props.video.url" target="_blank" rel="noopener noreferrer" class="youtube-link">Watch on YouTube</a>
+        <div class="video-title-overlay" v-if="!playing">
+          {{ props.video.title }}
+        </div>
+        <a :href="props.video.url" target="_blank" rel="noopener noreferrer" class="youtube-link">
+          Watch on YouTube
+        </a>
       </div>
     </template>
     <template v-else>
@@ -62,28 +64,17 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 2.5rem 0;
   position: relative;
 }
 .video-title-overlay {
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(40%);
-  background: #0008;
-  border-radius: 8px;
-  border-left: 4px solid;
-  border-right: 4px solid;
-  border-color: rgb(var(--vnx-pink));
   color: #fff;
   font-size: 1.35rem;
   font-weight: 600;
-  padding: 0.7rem 2.2rem;
+  padding: 0.5rem 1.2rem;
   z-index: 2;
   max-width: 90vw;
-  text-align: center;
-  pointer-events: none;
-  backdrop-filter: blur(8px);
+  text-align: left;
+  margin-bottom: 2rem;
 }
 .video-thumb {
   position: relative;
@@ -92,8 +83,6 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   aspect-ratio: 16/9;
   border-radius: 2rem;
   overflow: hidden;
-  box-shadow: 0 4px 32px #b5aaff33;
-  margin-bottom: 1.2rem;
   background: #222; /* fallback */
   display: block;
 }
@@ -102,7 +91,6 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   height: 100%;
   object-fit: cover;
   display: block;
-  image-rendering: pixelated;
 }
 .video-iframe {
   width: 100%;
@@ -111,29 +99,6 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   display: block;
   aspect-ratio: 16/9;
   background: #000;
-}
-.play-btn {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff8;
-  border: none;
-  border-radius: 50%;
-  font-size: 3.2rem;
-  color: #7b6ee6;
-  width: 80px;
-  height: 80px;
-  cursor: pointer;
-  box-shadow: 0 2px 12px #b5aaff44;
-  transition: background 0.2s;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.play-btn:hover {
-  background: #fff;
 }
 .video-info {
   margin-top: 0.7rem;
@@ -144,17 +109,17 @@ const showSkeleton = computed(() => props.loading || !props.video || !props.vide
   font-size: 1.25rem;
   font-weight: bold;
   text-decoration: none;
-  background: rgb(var(--vnx-black));
+  background: rgb(var(--vnx-fg));
   padding: 0.7rem 2.2rem;
-  border-radius: 1.2rem;
-  box-shadow: 0 2px 8px #b5aaff22;
-  transition: background 0.2s, color 0.2s;
-  display: inline-block;
-  margin: 0 auto;
+  border-radius: 8px;
+  border-top: solid 2px rgb(var(--vnx-pink));
+  border-bottom: solid 2px rgb(var(--vnx-black));
+  transition: background 0.2s, color 0.2s, border-top 0.2s;
 }
 .youtube-link:hover {
   background: rgb(var(--vnx-fg));
   color: rgb(var(--vnx-highlight));
+  border-top: solid 2px rgb(var(--vnx-highlight));
   text-decoration: underline;
 }
 /* Skeleton Loader Styles */

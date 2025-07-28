@@ -46,7 +46,6 @@ function handleScrollHijack(e: WheelEvent) {
   el.scrollLeft += e.deltaY
   e.preventDefault()
   // Optionally, you can log for debugging
-  // console.log('[MUSIC SCROLL] Forced horizontal scroll', el.scrollLeft)
 }
 
 function isMusicSectionInView() {
@@ -87,9 +86,6 @@ onMounted(async () => {
     if (!res.ok) throw new Error('Failed to fetch music')
     const feed = await res.json()
     tracks.value = Array.isArray(feed.channel?.item) ? feed.channel.item : []
-    tracks.value.forEach(track => {
-      console.log('Track image URL:', track.title, track.image)
-    })
   } catch (e: any) {
     error.value = e.message || 'Unknown error'
     console.error('MusicSection fetch error:', e)
@@ -136,11 +132,12 @@ onBeforeUnmount(() => {
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else ref="musicListRef" class="music-list">
       <div class="music-track" v-for="track in tracks" :key="track.link"
-        :style="track.image?.href && !track._imageError ? `background: linear-gradient(120deg, #e0c3fcbb 0%, #8ec5fcbb 100%), url('${track.image.href}') center/cover no-repeat;` : ''"
+        :style="track.image?.href && !track._imageError ? `background: url('${track.image.href}') center/cover no-repeat;` : ''"
       >
         <div class="track-header">
-          <span class="track-title">{{ track.title }}</span>
-          <a :href="track.link" target="_blank" rel="noopener noreferrer" class="track-link">Open</a>
+          <a :href="track.link" target="_blank" rel="noopener noreferrer" class="track-link">
+            {{ track.title }}
+          </a>
         </div>
         <div class="track-player">
           <CustomAudioPlayer
@@ -158,11 +155,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .music-section {
-  margin: 2rem 0 3rem 0;
+  margin: 0 0 3rem 0;
 }
 .music-section h2 {
   margin-bottom: 1.5rem;
   text-align: left;
+  color: rgb(var(--vnx-pink));
   font-family: var(--font-vnx);
   font-size: 2rem;
 }
@@ -178,17 +176,16 @@ onBeforeUnmount(() => {
   scroll-behavior: smooth;
 }
 .music-track {
-  margin-top: 2.7rem;
+  margin-top: 1.7rem;
   border-radius: 16px;
-  padding: 2rem 2.5rem 2.5rem 2.5rem;
+  padding: 0 0 2.5rem 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
   gap: 0;
   font-size: 1.22rem;
-  min-width: 420px;
-  max-width: 520px;
+  min-width: 520px;
   min-height: 340px;
   transition: box-shadow 0.2s, transform 0.2s;
   position: relative;
@@ -206,46 +203,35 @@ onBeforeUnmount(() => {
   font-family: var(--font-vnx);
 }
 .track-link {
-  color: #fff;
   text-decoration: none;
-  font-size: 1.18rem;
-  margin-left: auto;
-  transition: color 0.2s;
-  padding: 0.7rem 1.5rem;
-  border-radius: 0;
+  color: rgb(var(--vnx-pink));
+  font-weight: bold;
+  font-size: 2.0rem;
+  text-align: left;
   font-family: var(--font-vnx);
 }
 .track-link:hover {
-  color: #222;
   text-decoration: underline;
 }
 .track-header {
+  border-top: 4px solid rgb(var(--vnx-pink));
+  border-radius: 16px 16px 0 0;
+  background: rgb(var(--vnx-fg));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2.2rem;
-  border-radius: 0;
   padding: 0.7rem 1.2rem 0.7rem 1.2rem;
   font-family: var(--font-vnx);
 }
-.track-title {
-  font-weight: bold;
-  font-size: 1.35em;
-  margin-right: 0.5rem;
-  letter-spacing: 1px;
-  font-family: var(--font-vnx);
-}
 .track-player {
-  width: 100%;
-  display: flex;
-  align-items: flex-end;
+  border-bottom: 4px solid rgb(var(--vnx-black));
+  border-radius: 0 0 16px 16px;
+  background: rgb(var(--vnx-fg));
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0 2.5rem 1.2rem 2.5rem;
-  border-radius: 0;
-  box-sizing: border-box;
+  padding: 1.2rem 2.0rem 1.2rem 2.0rem;
 }
 .skeleton-title {
   width: 60%;
@@ -285,7 +271,6 @@ onBeforeUnmount(() => {
   .music-track {
     flex-direction: column;
     align-items: stretch;
-    padding: 1.5rem 0.7rem 2.5rem 0.7rem;
     gap: 1.2rem;
     min-width: 90vw;
     max-width: 98vw;
@@ -295,7 +280,6 @@ onBeforeUnmount(() => {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
-    margin-bottom: 1rem;
   }
   .track-link {
     margin-left: 0;

@@ -3,7 +3,7 @@
     <div class="logo-container-mc">
       <a href="/">
         <span class="sr-only">Venox Home</span>
-        <span class="site-title"><span class="site-title-pink">Lil</span>Venox</span>
+        <span class="site-title">LilVenox</span>
       </a>
     </div>
     <nav class="main-nav">
@@ -14,9 +14,6 @@
   </header>
 </template>
 
-<script setup lang="ts">
-// const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 261.76 226.69" width="38" height="38"><path d="M161.096.001l-30.225 52.351L100.647.001H-.005l130.877 226.688L261.749.001z" fill="#41b883"/><path d="M161.096.001l-30.225 52.351L100.647.001H52.346l78.526 136.01L209.398.001z" fill="#34495e"/></svg>`
-</script>
 
 <style scoped>
 a[href="/"] {
@@ -24,15 +21,15 @@ a[href="/"] {
 }
 
 .venox-header-mc {
+  border-bottom: 2px solid rgb(var(--vnx-pink));
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem 2.5rem 1.2rem 2.5rem;
-  background: rgba(var(--vnx-black), 0.4);
   position: sticky;
   top: 0;
   z-index: 10;
-  backdrop-filter: blur(8px);
+  background: rgb(var(--vnx-black));
 }
 .logo-container-mc {
   display: flex;
@@ -44,13 +41,25 @@ a[href="/"] {
   font-family: var(--font-vnx);
   font-size: 2.7rem;
   color: rgb(var(--vnx-black));
-  font-weight: bold;
-  -webkit-text-stroke: 4px rgba(var(--vnx-fg), 1);
+  background: -webkit-linear-gradient(
+      315deg,
+      rgb(var(--vnx-pink)) 40%,
+      rgba(var(--vnx-white), 0.2) 40%,
+      rgba(var(--vnx-white), 0.2) 60%,
+      rgba(var(--vnx-white), 0.1) 60%,
+      rgba(var(--vnx-white), 0.1) 80%
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  background-position: 50% 1000%;  font-weight: bold;
   letter-spacing: 0.220rem;
+  transition: background-position 0.8s ease;
 }
 
-.site-title-pink {
-  color: rgb(var(--vnx-pink));
+.site-title:hover {
+  background-position: 0% 0%;
 }
 
 .main-nav {
