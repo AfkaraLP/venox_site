@@ -6,11 +6,9 @@ use model::soundcloud::SoundcloudFeed;
 use model::youtube::YoutubeFeed;
 use reqwest::Client;
 use rusqlite::Connection;
-use std::ops::{Index, IndexMut};
 use std::sync::Arc;
 use std::time::Duration;
-use tokio::sync::Mutex;
-use tokio::sync::RwLock;
+use tokio::sync::{Mutex, RwLock};
 use util::db::{self as venox_db, get_youtube_feeds_from_db};
 
 mod model;
@@ -23,7 +21,6 @@ const VENOX_YT_ACCOUNT_IDS: [&str; 4] = [
     "UC3Olgcd6HHw1XSfnqKAqm9g",
     "UCh8XttfpNZxg2Q27iZ8DXcg",
     "UClhDo4tjwvbJLQYm71TF_Ag",
-    // "UCYPixV_-08kSKkVFWyidbFw",
 ];
 
 const VENOX_SOUNDCLOUD_ID: &str = "001310885850";
@@ -98,9 +95,9 @@ async fn main() -> std::io::Result<()> {
 
 #[get("/youtube_videos")]
 async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    if data.yt_data.read().await.len() > 0 {
-        let feeds = data.yt_data.read().await;
-        let feeds = serde_json::to_value(&*feeds)?;
+    let yt_data = data.yt_data.read().await;
+    if !yt_data.is_empty() {
+        let feeds = serde_json::to_value(&*yt_data)?;
         return Ok(web::Json(feeds));
     }
     let connection = data.connection.lock().await;
@@ -115,8 +112,8 @@ async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Err
 
 #[get("/soundcloud_data")]
 async fn soundcloud_data(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    if data.sc_data.read().await.is_some() {
-        let sc_data = data.sc_data.write().await;
+    let sc_data = data.sc_data.read().await;
+    if sc_data.is_some() {
         let sc_data = serde_json::to_value(&*sc_data)?;
         return Ok(web::Json(sc_data));
     }
@@ -124,8 +121,8 @@ async fn soundcloud_data(data: web::Data<AppState>) -> Result<impl Responder, Er
     let connection = data.connection.lock().await;
     let feeds = venox_db::get_soundcloud_feeds_from_db(&connection, vec![VENOX_SOUNDCLOUD_ID])
         .map_err(|e| {
-            eprintln!("Error getting youtube feeds: {e:?}");
-            ErrorInternalServerError("Error Getting Youtube Feeds")
+            eprintln!("Error getting soundcloud feeds: {e:?}");
+            ErrorInternalServerError("Error Getting Soundcloud Feeds")
         })?;
     let feed = feeds.into_iter().next();
     let feed = serde_json::to_value(feed)?;
