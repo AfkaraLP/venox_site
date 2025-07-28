@@ -82,6 +82,37 @@ function detachWheel(idx: number) {
   }
 }
 
+function timeAgo(utcDate: string | Date): string {
+  const now = new Date();
+  const date = new Date(utcDate);
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  const intervals: [number, string][] = [
+    [60, "second"],
+    [60, "minute"],
+    [24, "hour"],
+    [7, "day"],
+    [4.34524, "week"], // approx weeks per month
+    [12, "month"],
+    [Infinity, "year"],
+  ];
+
+  let unitIndex = 0;
+  let value = seconds;
+
+  for (const [divisor, name] of intervals) {
+    if (value < divisor) {
+      const rounded = Math.floor(value);
+      return `${rounded} ${name}${rounded !== 1 ? "s" : ""} ago`;
+    }
+    value /= divisor;
+    unitIndex++;
+  }
+
+  return "just now"; // fallback
+}
+
+
 onMounted(async () => {
   try {
     const res = await fetch('/api/youtube_videos')
@@ -169,6 +200,7 @@ onBeforeUnmount(() => {
               <span v-if="video.group.community.statistics.views">
                 {{video.group.community.statistics.views}} view<span v-if="video.group.community.statistics.views > 1">s</span>
               </span>
+              <span v-if="video.published">{{timeAgo(video.published)}}</span>
             </div>
           </div>
         </div>
@@ -347,12 +379,13 @@ onBeforeUnmount(() => {
   color: rgba(var(--vnx-white), 0.8);
   font-weight: bold;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, auto);
+  padding: 0 0.6rem 0 0.6rem;
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  margin: 1rem 0 1rem 0;
+  margin: 0 0 1rem 0;
 }
 
 </style> 
