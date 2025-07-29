@@ -95,10 +95,10 @@ async fn main() -> std::io::Result<()> {
 
 #[get("/youtube_videos")]
 async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    // let yt_data = data.yt_data.read().await;
-    // if !yt_data.is_empty() {
-    //     return Ok(web::Json(serde_json::to_value(&*yt_data)?));
-    // }
+    let yt_data = data.yt_data.read().await;
+    if !yt_data.is_empty() {
+        return Ok(web::Json(serde_json::to_value(&*yt_data)?));
+    }
 
     let connection = data.connection.lock().await;
     let feeds = get_youtube_feeds_from_db(&connection, VENOX_YT_ACCOUNT_IDS.to_vec())
@@ -108,10 +108,9 @@ async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Err
 
 #[get("/soundcloud_data")]
 async fn soundcloud_data(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    let _ = data.sc_data.write().await.take();
-    // if let Some(sc_data) = data.sc_data.read().await.as_ref() {
-    //     return Ok(web::Json(serde_json::to_value(sc_data)?));
-    // }
+    if let Some(sc_data) = data.sc_data.read().await.as_ref() {
+        return Ok(web::Json(serde_json::to_value(sc_data)?));
+    }
 
     let connection = data.connection.lock().await;
     let feed = venox_db::get_soundcloud_feeds_from_db(&connection, vec![VENOX_SOUNDCLOUD_ID])
