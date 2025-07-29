@@ -95,36 +95,33 @@ async fn main() -> std::io::Result<()> {
 
 #[get("/youtube_videos")]
 async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    let yt_data = data.yt_data.read().await;
-    if !yt_data.is_empty() {
-        let feeds = serde_json::to_value(&*yt_data)?;
-        return Ok(web::Json(feeds));
-    }
+    // let yt_data = data.yt_data.read().await;
+    // if !yt_data.is_empty() {
+    //     return Ok(web::Json(serde_json::to_value(&*yt_data)?));
+    // }
+
     let connection = data.connection.lock().await;
-    let feeds =
-        get_youtube_feeds_from_db(&connection, VENOX_YT_ACCOUNT_IDS.into()).map_err(|e| {
-            eprintln!("Error getting youtube feeds: {e:?}");
-            ErrorInternalServerError("Error Getting Youtube Feeds")
-        })?;
-    let feeds = serde_json::to_value(&*feeds)?;
-    Ok(web::Json(feeds))
+    let feeds = get_youtube_feeds_from_db(&connection, VENOX_YT_ACCOUNT_IDS.to_vec())
+        .map_err(map_db_err)?;
+    Ok(web::Json(serde_json::to_value(&feeds)?))
 }
 
 #[get("/soundcloud_data")]
 async fn soundcloud_data(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    let sc_data = data.sc_data.read().await;
-    if sc_data.is_some() {
-        let sc_data = serde_json::to_value(&*sc_data)?;
-        return Ok(web::Json(sc_data));
-    }
+    let _ = data.sc_data.write().await.take();
+    // if let Some(sc_data) = data.sc_data.read().await.as_ref() {
+    //     return Ok(web::Json(serde_json::to_value(sc_data)?));
+    // }
 
     let connection = data.connection.lock().await;
-    let feeds = venox_db::get_soundcloud_feeds_from_db(&connection, vec![VENOX_SOUNDCLOUD_ID])
-        .map_err(|e| {
-            eprintln!("Error getting soundcloud feeds: {e:?}");
-            ErrorInternalServerError("Error Getting Soundcloud Feeds")
-        })?;
-    let feed = feeds.into_iter().next();
-    let feed = serde_json::to_value(feed)?;
-    Ok(web::Json(feed))
+    let feed = venox_db::get_soundcloud_feeds_from_db(&connection, vec![VENOX_SOUNDCLOUD_ID])
+        .map_err(map_db_err)?
+        .into_iter()
+        .next();
+    Ok(web::Json(serde_json::to_value(feed)?))
+}
+
+pub fn map_db_err(e: impl std::fmt::Debug) -> Error {
+    eprintln!("Database error: {e:#?}");
+    ErrorInternalServerError("Database Error")
 }

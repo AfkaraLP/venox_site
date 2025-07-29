@@ -90,7 +90,8 @@ pub fn initialize_soundcloud_db(connection: &Connection) -> Result<()> {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             channel_id TEXT NOT NULL,
             url TEXT,
-            FOREIGN KEY (channel_id) REFERENCES channels(id)
+            FOREIGN KEY (channel_id) REFERENCES channels(id),
+            UNIQUE(channel_id, url) on CONFLICT REPLACE
         );
 
         -- Table for songs/items
@@ -105,7 +106,8 @@ pub fn initialize_soundcloud_db(connection: &Connection) -> Result<()> {
             enclosure_url TEXT NOT NULL,
             enclosure_type TEXT,
             image_url TEXT,
-            FOREIGN KEY (channel_id) REFERENCES channels(id)
+            FOREIGN KEY (channel_id) REFERENCES channels(id),
+            UNIQUE(channel_id, link) ON CONFLICT REPLACE
         );
     ";
 
