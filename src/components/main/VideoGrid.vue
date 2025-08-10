@@ -20,6 +20,13 @@ interface ChannelFeed {
   entry: VideoEntry[]
 }
 
+function formatNumber(num: number): string {
+    if (num < 1000) return num.toString();
+    if (num < 1_000_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+    if (num < 1_000_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'mil';
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, '') + 'B';
+}
+
 const feeds = ref<ChannelFeed[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -195,10 +202,10 @@ onBeforeUnmount(() => {
             <a :href="getYoutubeUrl(video.id)" class="video-title" target="_blank" rel="noopener noreferrer">{{ video.title }}</a>
             <div class="video-stats">
               <span v-if="video.group.community.starRating.count">
-                 {{video.group.community.starRating.count}} like<span v-if="video.group.community.starRating.count > 1">s</span>
+                 {{formatNumber(video.group.community.starRating.count)}} like<span v-if="video.group.community.starRating.count > 1">s</span>
               </span>
               <span v-if="video.group.community.statistics.views">
-                {{video.group.community.statistics.views}} view<span v-if="video.group.community.statistics.views > 1">s</span>
+                {{formatNumber(video.group.community.statistics.views)}} view<span v-if="video.group.community.statistics.views > 1">s</span>
               </span>
               <span v-if="video.published">{{timeAgo(video.published)}}</span>
             </div>
@@ -388,4 +395,4 @@ onBeforeUnmount(() => {
   margin: 0 0 1rem 0;
 }
 
-</style> 
+</style>
