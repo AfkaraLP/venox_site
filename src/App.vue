@@ -5,8 +5,6 @@ import HomeHero from "./components/main/HomeHero.vue"
 import FeaturedVideo from "./components/main/FeaturedVideo.vue"
 import VideoGrid from "./components/main/VideoGrid.vue"
 import MusicSection from "./components/main/MusicSection.vue"
-// import ArtGallery from "./components/main/ArtGallery.vue" // still hidden
-
 const featuredVideo = ref<any>(null)
 const featuredVideoError = ref<string | null>(null)
 const videoGridLoading = ref(true)
@@ -79,7 +77,6 @@ onMounted(async () => {
     <div id="videos">
       <VideoGrid />
     </div>
-    <!-- <ArtGallery /> -->
     <div id="music">
       <MusicSection />
     </div>
