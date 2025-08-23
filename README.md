@@ -24,10 +24,10 @@ Simply run:
 docker-compose up --build
 ```
 
-- **Frontend:** http://localhost:3000
+- **Frontend:** http://localhost:9998
 - **Backend API:** http://localhost:9999
 
-You can now reverse proxy the frontend (port 3000) and backend (port 9999) using Caddy or another proxy as needed.
+You can now reverse proxy the frontend (port 9998) and backend (port 9999) using Caddy or another proxy as needed.
 
 ---
 
@@ -59,12 +59,10 @@ You can now reverse proxy the frontend (port 3000) and backend (port 9999) using
 ---
 
 ## Notes
-- The frontend is built and served by Nginx in the `frontend` container on port 3000.
+- The frontend is built and served by Nginx in the `frontend` container on port 9998.
 - The backend API is served by the Rust binary in the `backend` container on port 9999.
 - You can reverse proxy these services with Caddy, Nginx, or another proxy.
 - All builds are reproducible via Nix flakes.
 
 ---
 
-## License
-MIT or as specified in this repository.

@@ -20,6 +20,7 @@ coverage
 
 # Editor directories and files
 .vscode/*
+.helix/
 !.vscode/extensions.json
 .idea
 *.suo
@@ -27,6 +28,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+.ignore
 
 *.tsbuildinfo
 backend/target/*
