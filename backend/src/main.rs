@@ -55,17 +55,14 @@ async fn main() -> std::io::Result<()> {
             store_interval.tick().await;
             println!("fetched new database data");
 
-            for (idx, account_id) in VENOX_YT_ACCOUNT_IDS.iter().enumerate() {
+            for account_id in VENOX_YT_ACCOUNT_IDS.iter() {
                 if let Ok(response) = YoutubeFeed::get_content_from_id(account_id, &client).await {
                     let connection = connection.lock().await;
                     venox_db::insert_youtube_feed(&connection, &response)
                         .expect("insert new data into youtube feed");
+
                     let mut yt_data = yt_data.write().await;
-                    if let Some(account_data) = yt_data.get_mut(idx) {
-                        *account_data = response;
-                    } else {
-                        yt_data.insert(idx, response);
-                    }
+                    yt_data.push(response);
                 }
             }
 
