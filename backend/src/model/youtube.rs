@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 const RSS_URL: &str = "https://www.youtube.com/feeds/videos.xml?channel_id=";
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 #[serde(rename = "feed")]
 pub struct YoutubeFeed {
     pub id: String,
@@ -18,14 +18,14 @@ pub struct YoutubeFeed {
     pub entry: Vec<Entry>,
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Author {
     pub name: String,
     pub uri: String,
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Entry {
     pub id: String,
@@ -39,7 +39,7 @@ pub struct Entry {
     pub media_group: MediaGroup,
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaGroup {
     #[serde(rename = "thumbnail", alias = "media:thumbnail")]
@@ -49,7 +49,7 @@ pub struct MediaGroup {
     pub media_community: MediaCommunity,
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 pub struct MediaCommunity {
     #[serde(rename = "starRating", alias = "media:starRating")]
     pub star_rating: StarRating,
@@ -57,17 +57,17 @@ pub struct MediaCommunity {
     #[serde(rename = "statistics", alias = "media:statistics")]
     pub statistics: Statistics,
 }
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 pub struct StarRating {
     pub count: u32,
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 pub struct Statistics {
     pub views: u64,
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaThumbnail {
     pub url: String,

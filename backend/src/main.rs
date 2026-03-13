@@ -62,7 +62,9 @@ async fn main() -> std::io::Result<()> {
                         .expect("insert new data into youtube feed");
 
                     let mut yt_data = yt_data.write().await;
-                    yt_data.push(response);
+                    if !yt_data.contains(&response) {
+                        yt_data.push(response);
+                    }
                 }
             }
 
