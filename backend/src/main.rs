@@ -6,6 +6,7 @@ use model::soundcloud::SoundcloudFeed;
 use model::youtube::YoutubeFeed;
 use reqwest::Client;
 use rusqlite::Connection;
+use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::{Mutex, RwLock};
@@ -29,7 +30,7 @@ const VENOX_SOUNDCLOUD_ID: &str = "001310885850";
 struct AppState {
     connection: Arc<Mutex<Connection>>,
     sc_data: Arc<RwLock<Option<SoundcloudFeed>>>,
-    yt_data: Arc<RwLock<Vec<YoutubeFeed>>>,
+    yt_data: Arc<RwLock<HashMap<&'static str, YoutubeFeed>>>,
 }
 
 #[actix_web::main]
@@ -42,7 +43,7 @@ async fn main() -> std::io::Result<()> {
     let data = AppState {
         connection: Arc::new(Mutex::new(connection)),
         sc_data: Arc::new(RwLock::new(None)),
-        yt_data: Arc::new(RwLock::new(Vec::new())),
+        yt_data: Arc::new(RwLock::new(HashMap::new())),
     };
 
     let mut store_interval = tokio::time::interval(Duration::from_secs(60));
@@ -62,9 +63,7 @@ async fn main() -> std::io::Result<()> {
                         .expect("insert new data into youtube feed");
 
                     let mut yt_data = yt_data.write().await;
-                    if !yt_data.contains(&response) {
-                        yt_data.push(response);
-                    }
+                    yt_data.insert(account_id, response);
                 }
             }
 
@@ -96,7 +95,9 @@ async fn main() -> std::io::Result<()> {
 async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Error> {
     let yt_data = data.yt_data.read().await;
     if !yt_data.is_empty() {
-        return Ok(web::Json(serde_json::to_value(&*yt_data)?));
+        return Ok(web::Json(serde_json::to_value(
+            &*yt_data.values().collect::<Vec<&YoutubeFeed>>(),
+        )?));
     }
 
     let connection = data.connection.lock().await;
