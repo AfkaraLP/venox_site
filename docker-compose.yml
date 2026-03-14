@@ -1,20 +1,22 @@
-version: "3.8"
+version: '3.8'
 
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    restart: always
     ports:
-      - "9999:9999"
+      - '9999:9999'
     expose:
-      - "9999"
+      - '9999'
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
+    restart: always
     ports:
-      - "9998:9998"
+      - '9998:9998'
     depends_on:
       - backend
