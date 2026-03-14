@@ -27,10 +27,6 @@ const error = ref<string | null>(null)
 const musicListRef = ref<HTMLElement | null>(null)
 const sectionRef = ref<HTMLElement | null>(null)
 
-// Track if mouse is over the very top section
-let mouseOverTopSection = false
-let mouseOverMusicSection = false
-
 function getAudioUrl(track: Song): string | undefined {
   return track.enclosure?.url || track.data_enclosure?.url
 }
@@ -40,46 +36,11 @@ function handleImageError(track: any) {
   console.error('Failed to load cover image for track:', track.title, track.image?.url);
 }
 
-function handleScrollHijack(e: WheelEvent) {
-  const el = musicListRef.value
-  if (!el) return
-  // Always scroll horizontally when wheel event occurs on this section
-  el.scrollLeft += e.deltaY
-  e.preventDefault()
-  // Optionally, you can log for debugging
-}
-
 function isMusicSectionInView() {
   if (!sectionRef.value) return false
   const rect = sectionRef.value.getBoundingClientRect()
   // Consider in view if at least 60px of the section is visible
   return rect.bottom > 60 && rect.top < window.innerHeight - 60
-}
-
-function isFooterMostlyInView() {
-  const footer = document.querySelector('footer')
-  if (!footer) return false
-  const rect = footer.getBoundingClientRect()
-  const footerHeight = rect.height
-  const visibleTop = Math.max(rect.top, 0)
-  const visibleBottom = Math.min(rect.bottom, window.innerHeight)
-  const visibleHeight = Math.max(0, visibleBottom - visibleTop)
-  return visibleHeight / footerHeight >= 0.6
-}
-
-function handleGlobalWheel(e: WheelEvent) {
-  if (mouseOverTopSection) return
-  if (!mouseOverMusicSection) return
-  if (!isMusicSectionInView()) return
-  if (!isFooterMostlyInView()) return
-  const el = musicListRef.value
-  if (!el) return
-  // Only hijack if not at the very left or right
-  const atStart = el.scrollLeft === 0 && e.deltaY < 0
-  const atEnd = Math.abs(el.scrollLeft + el.clientWidth - el.scrollWidth) < 2 && e.deltaY > 0
-  if (atStart || atEnd) return // allow normal vertical scroll at edges
-  el.scrollLeft += e.deltaY * 2 // make it faster
-  e.preventDefault()
 }
 
 onMounted(async () => {
@@ -95,28 +56,12 @@ onMounted(async () => {
     loading.value = false
   }
   await nextTick()
-  // Add global wheel event listener
-  window.addEventListener('wheel', handleGlobalWheel, { passive: false })
-  // Track mouse over top section
-  const topSection = document.querySelector('.home-hero')
-  if (topSection) {
-    topSection.addEventListener('mouseenter', () => { mouseOverTopSection = true })
-    topSection.addEventListener('mouseleave', () => { mouseOverTopSection = false })
-  }
 })
 
-onBeforeUnmount(() => {
-  window.removeEventListener('wheel', handleGlobalWheel)
-  const topSection = document.querySelector('.home-hero')
-  if (topSection) {
-    topSection.removeEventListener('mouseenter', () => { mouseOverTopSection = true })
-    topSection.removeEventListener('mouseleave', () => { mouseOverTopSection = false })
-  }
-})
 </script>
 
 <template>
-  <section class="music-section" ref="sectionRef" @mouseenter="mouseOverMusicSection = true" @mouseleave="mouseOverMusicSection = false">
+  <section class="music-section" ref="sectionRef">
     <h2>Music</h2>
     <div v-if="loading">
       <div class="music-list">
@@ -293,4 +238,4 @@ onBeforeUnmount(() => {
     padding: 1rem 1rem 1.2rem 1rem;
   }
 }
-</style> 
+</style>
