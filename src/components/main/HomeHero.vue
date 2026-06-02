@@ -8,7 +8,7 @@
       <p class="desc"><i class="quote"> "Venox. Games. Art. Sound. All in one place."</i></p>
       <a href="https://ko-fi.com/lilvenox" class="kofi-link" target="_blank" rel="noopener">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/kofi.svg" alt="Ko-fi" class="kofi-icon" />
-        <span>Support me on Ko-fi</span>
+        <span>Commissions on Ko-fi!</span>
       </a>
     </div>
   </section>
