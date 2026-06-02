@@ -80,6 +80,7 @@ onMounted(async () => {
     <div id="music">
       <MusicSection />
     </div>
+
   </main>
 
   <footer id="footer">
@@ -97,9 +98,7 @@ onMounted(async () => {
         <a href="https://www.youtube.com/channel/UCs9v8InFppRaPtTJjOpxWWg/membership" class="social-link" target="_blank" rel="noopener" title="YouTube">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="28" height="28" />
         </a>
-        <a href="https://ko-fi.com/lilvenox" class="social-link" target="_blank" rel="noopener" title="Ko-fi">
-          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/kofi.svg" alt="Ko-fi" width="28" height="28" />
-        </a>
+
         <!-- <a href="https://www.tiktok.com/@lilvenox" class="social-link" target="_blank" rel="noopener" title="TikTok"> -->
           <!-- <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="28" height="28" /> -->
         <!-- </a> -->
@@ -107,7 +106,7 @@ onMounted(async () => {
           <!-- <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="28" height="28" /> -->
         <!-- </a> -->
       </div>
-      <span>© 2025 LilVenox</span>
+      <span>© 2026 LilVenox</span>
     </div>
   </footer>
 </template>
