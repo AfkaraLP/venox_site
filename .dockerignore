@@ -1,0 +1,29 @@
+# Node modules and bun cache
+node_modules
+dist
+bun.lockb
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Editor folders
+.vscode
+.idea
+
+# Environment files (optional)
+.env
+.env.local
+.env.*.local
+
+# Build output (if you want to keep clean)
+dist

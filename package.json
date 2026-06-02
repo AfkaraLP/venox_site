@@ -1,0 +1,47 @@
+{
+  "name": "venox_site",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build",
+    "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
+    "lint:eslint": "eslint . --fix",
+    "lint": "run-s lint:*",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "@googleapis/youtube": "^25.0.0",
+    "@tailwindcss/postcss": "^4.1.4",
+    "postcss": "^8.5.3",
+    "postcss-loader": "^8.1.1",
+    "save-dev": "^0.0.1-security",
+    "scrape-youtube": "^2.4.0",
+    "tailwindcss": "^4.1.4",
+    "ts-node": "^10.9.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.1",
+    "@types/node": "^22.15.3",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.5.0",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.25.1",
+    "eslint-plugin-oxlint": "^0.16.8",
+    "eslint-plugin-vue": "~10.0.1",
+    "jiti": "^2.4.2",
+    "npm-run-all2": "^7.0.2",
+    "oxlint": "^0.16.8",
+    "prettier": "3.5.3",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.3",
+    "vite-plugin-vue-devtools": "^7.7.6",
+    "vue-tsc": "^2.2.10"
+  }
+}
