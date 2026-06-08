@@ -10,7 +10,7 @@
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/kofi.svg" alt="Ko-fi" class="kofi-icon" />
         <span class="kofi-text">
           Commissions on Ko-fi!
-          <small class="kofi-sub">(fuel the venox grind ✦)</small>
+          <small class="kofi-sub">(or just... fuel the venox grind ✦)</small>
         </span>
       </a>
     </div>
