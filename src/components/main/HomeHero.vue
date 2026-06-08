@@ -8,7 +8,10 @@
       <p class="desc"><i class="quote"> "Venox. Games. Art. Sound. All in one place."</i></p>
       <a href="https://ko-fi.com/lilvenox" class="kofi-link" target="_blank" rel="noopener">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/kofi.svg" alt="Ko-fi" class="kofi-icon" />
-        <span>Commissions on Ko-fi!</span>
+        <span class="kofi-text">
+          Commissions on Ko-fi!
+          <small class="kofi-sub">(fuel the venox grind ✦)</small>
+        </span>
       </a>
     </div>
   </section>
@@ -86,5 +89,17 @@
   width: 22px;
   height: 22px;
   filter: invert(0.75) sepia(0.4) saturate(3) hue-rotate(300deg);
+}
+.kofi-text {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.15;
+}
+.kofi-sub {
+  font-size: 0.72rem;
+  font-weight: 400;
+  opacity: 0.8;
+  margin-top: 0.15rem;
 }
 </style> 
