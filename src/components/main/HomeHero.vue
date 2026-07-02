@@ -3,7 +3,7 @@
     <div class="hero-content">
       <h1 class="channel-name">LilVenox</h1>
       <p class="tagline">
-        Gaming <span class="pink">/</span> Genshin <span class="pink">/</span> Art <span class="pink">/</span> Music
+        Gaming <span class="pink">/</span> Art <span class="pink">/</span> Music
       </p>
       <p class="desc"><i class="quote"> "Venox. Games. Art. Sound. All in one place."</i></p>
       <div class="cta-row">
