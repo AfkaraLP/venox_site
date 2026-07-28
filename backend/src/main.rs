@@ -17,11 +17,9 @@ mod util;
 
 const PORT: u16 = 9999;
 
-const VENOX_YT_ACCOUNT_IDS: [&str; 4] = [
-    "UCs9v8InFppRaPtTJjOpxWWg",
+const VENOX_YT_ACCOUNT_IDS: [&str; 2] = [
     "UC3Olgcd6HHw1XSfnqKAqm9g",
     "UCh8XttfpNZxg2Q27iZ8DXcg",
-    "UClhDo4tjwvbJLQYm71TF_Ag",
 ];
 
 const VENOX_SOUNDCLOUD_ID: &str = "001310885850";
