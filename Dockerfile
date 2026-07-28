@@ -1,4 +1,6 @@
-FROM oven/bun:1.1 AS builder
+FROM oven/bun:1.3.14 AS builder
+
+RUN apt-get update && apt-get install -y --no-install-recommends procps && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY . .
