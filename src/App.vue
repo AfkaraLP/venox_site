@@ -5,6 +5,7 @@ import HomeHero from "./components/main/HomeHero.vue"
 import FeaturedVideo from "./components/main/FeaturedVideo.vue"
 import VideoGrid from "./components/main/VideoGrid.vue"
 import MusicSection from "./components/main/MusicSection.vue"
+import ShopSection from "./components/main/ShopSection.vue"
 const featuredVideo = ref<any>(null)
 const featuredVideoError = ref<string | null>(null)
 const videoGridLoading = ref(true)
@@ -65,6 +66,7 @@ onMounted(async () => {
 <template>
   <VenoxHeader />
   <main class="main-content">
+    <ShopSection />
     <HomeHero />
     <FeaturedVideo
       :video="featuredVideo"
