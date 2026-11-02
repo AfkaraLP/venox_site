@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Dependencies first so bun install is cached unless the lockfile changes
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
 
 COPY . .
 RUN bun run build

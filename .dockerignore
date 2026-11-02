@@ -1,3 +1,6 @@
+# Backend is built separately; don't send its sources into the frontend context
+backend
+
 # Node modules and bun cache
 node_modules
 dist

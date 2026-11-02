@@ -2,9 +2,6 @@
 target
 **/*.rs.bk
 
-# Cargo files that don't need to be copied unless needed
-**/*.lock
-
 # Git
 .git
 .gitignore
