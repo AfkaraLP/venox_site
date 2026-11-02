@@ -41,10 +41,10 @@
   isolation: isolate;
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.7fr);
   align-items: center;
   gap: clamp(1.5rem, 4vw, 4rem);
-  min-height: 490px;
+  min-height: 560px;
   margin: 0 auto 2.5rem;
   padding: clamp(1.25rem, 4vw, 3.75rem);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -71,7 +71,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 370px;
+  min-height: 470px;
   overflow: hidden;
   border-radius: 24px;
   background: linear-gradient(145deg, #ffe8f2, #f8c8df 55%, #fff5fb);
@@ -80,7 +80,7 @@
   transition: transform .25s ease, box-shadow .25s ease;
 }
 .shop-art:hover { transform: rotate(0) scale(1.015); box-shadow: 0 24px 55px rgba(49, 9, 35, .35); }
-.shop-art img { width: 100%; height: 100%; max-height: 460px; object-fit: contain; filter: drop-shadow(0 20px 18px rgba(84, 26, 58, .2)); }
+.shop-art img { width: 100%; height: 100%; max-height: 640px; object-fit: contain; filter: drop-shadow(0 20px 18px rgba(84, 26, 58, .2)); }
 .shop-shine { position: absolute; inset: -45% auto -45% -50%; width: 30%; transform: rotate(20deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent); animation: shine 5s ease-in-out infinite; pointer-events: none; }
 @keyframes shine { 0%, 55% { left: -50%; } 85%, 100% { left: 130%; } }
 .shop-sticker { position: absolute; z-index: 1; top: 18px; left: 18px; padding: .55rem .8rem; border: 1px solid rgba(255,255,255,.8); border-radius: 999px; color: #8e2858; background: rgba(255,255,255,.83); font-size: .72rem; font-weight: 800; letter-spacing: .1em; box-shadow: 0 5px 15px rgba(97,38,69,.12); }
@@ -95,8 +95,8 @@
 .shop-note { margin: 1.1rem 0 0; color: rgba(255,255,255,.73); font-size: .83rem; }
 @media (max-width: 760px) {
   .shop-feature { grid-template-columns: 1fr; gap: 1.4rem; min-height: auto; padding: 1rem 1rem 1.7rem; border-radius: 23px; }
-  .shop-art { min-height: 280px; max-height: 340px; transform: none; }
-  .shop-art img { max-height: 340px; }
+  .shop-art { min-height: 300px; max-height: 420px; transform: none; }
+  .shop-art img { max-height: 420px; }
   .shop-copy { padding: 0 .35rem; }
   .shop-copy h1 { font-size: clamp(2.75rem, 12vw, 4rem); }
   .shop-description { margin: 1rem 0 1.3rem; }
