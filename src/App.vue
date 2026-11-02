@@ -6,6 +6,7 @@ import FeaturedVideo from "./components/main/FeaturedVideo.vue"
 import VideoGrid from "./components/main/VideoGrid.vue"
 import MusicSection from "./components/main/MusicSection.vue"
 import ShopSection from "./components/main/ShopSection.vue"
+import TeamSection from "./components/main/TeamSection.vue"
 const featuredVideo = ref<any>(null)
 const featuredVideoError = ref<string | null>(null)
 const videoGridLoading = ref(true)
@@ -81,6 +82,9 @@ onMounted(async () => {
     </div>
     <div id="music">
       <MusicSection />
+    </div>
+    <div id="team">
+      <TeamSection />
     </div>
 
   </main>

@@ -9,6 +9,7 @@
     <nav class="main-nav">
       <a href="#music" class="nav-link">Music</a>
       <a href="#videos" class="nav-link">Videos</a>
+      <a href="#team" class="nav-link">Team</a>
       <a href="#footer" class="nav-link">Contact</a>
     </nav>
   </header>
