@@ -39,10 +39,14 @@ const team: TeamMember[] = [
         class="team-card"
       >
         <div class="team-photo-wrap">
-          <div class="team-photos" :class="{ 'single': !member.charImage }">
-            <img :src="member.image" :alt="member.name" class="team-photo" loading="lazy" />
-            <img v-if="member.charImage" :src="member.charImage" :alt="`${member.name} as ${member.role}`" class="team-photo" loading="lazy" />
-          </div>
+          <img :src="member.image" :alt="member.name" class="team-photo" loading="lazy" />
+          <img
+            v-if="member.charImage"
+            :src="member.charImage"
+            :alt="`${member.name} as ${member.role}`"
+            class="team-char-badge"
+            loading="lazy"
+          />
         </div>
         <div class="team-info">
           <span class="team-name">{{ member.name }}</span>
@@ -86,9 +90,27 @@ const team: TeamMember[] = [
 .team-photo-wrap {
   border-top: 4px solid rgb(var(--vnx-pink));
   background: rgb(var(--vnx-mg));
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
+  position: relative;
+  line-height: 0;
+}
+.team-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+.team-char-badge {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  width: 27%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 3px solid rgb(var(--vnx-pink));
+  object-fit: cover;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+  background: rgb(var(--vnx-mg));
 }
 .team-photos {
   display: grid;
@@ -97,13 +119,6 @@ const team: TeamMember[] = [
 }
 .team-photos.single {
   grid-template-columns: 1fr;
-}
-.team-photo {
-  width: 100%;
-  height: auto;
-  display: block;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
 }
 .team-info {
   flex: 1;
