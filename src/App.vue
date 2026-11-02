@@ -101,7 +101,7 @@ onMounted(async () => {
         <a href="https://discord.gg/hew9GxbbQU" class="social-link" target="_blank" rel="noopener" title="Discord">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" alt="Discord" width="28" height="28" />
         </a>
-        <a href="https://www.youtube.com/channel/UCs9v8InFppRaPtTJjOpxWWg/membership" class="social-link" target="_blank" rel="noopener" title="YouTube">
+        <a href="https://www.youtube.com/@venoxart" class="social-link" target="_blank" rel="noopener" title="YouTube">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="28" height="28" />
         </a>
 
