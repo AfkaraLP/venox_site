@@ -14,7 +14,7 @@
             <small class="cta-sub">(or just... fuel the venox grind ✦)</small>
           </span>
         </a>
-        <a href="https://discord.gg/tQGVzWGUu4" class="cta-link discord-link" target="_blank" rel="noopener">
+        <a href="https://discord.gg/DqSTjtcqCN" class="cta-link discord-link" target="_blank" rel="noopener">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" alt="Discord" class="cta-icon" />
           <span class="cta-text">
             Venox's Flicking Corner

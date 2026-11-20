@@ -1,9 +1,8 @@
 # Backend is built separately; don't send its sources into the frontend context
 backend
 
-# Node modules and bun cache
+# Node modules and bun cache (dist is now NEEDED: Dockerfile copies host-built dist)
 node_modules
-dist
 bun.lockb
 
 # Logs
@@ -28,5 +27,4 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Build output (if you want to keep clean)
-dist
+# Build output — required by the Dockerfile (host-built dist)

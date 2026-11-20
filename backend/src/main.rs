@@ -33,7 +33,11 @@ struct AppState {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let client: Client = Client::new();
+    let client: Client = Client::builder()
+        // never let an upstream fetch hang forever while we hold locks
+        .timeout(Duration::from_secs(20))
+        .build()
+        .expect("reqwest client");
     let connection: Connection =
         Connection::open("channels_info.db").expect("couldn't connect to database");
     venox_db::initialize_soundcloud_db(&connection).expect("initialize database");
@@ -56,9 +60,14 @@ async fn main() -> std::io::Result<()> {
 
             for account_id in VENOX_YT_ACCOUNT_IDS.iter() {
                 if let Ok(response) = YoutubeFeed::get_content_from_id(account_id, &client).await {
-                    let connection = connection.lock().await;
-                    venox_db::insert_youtube_feed(&connection, &response)
-                        .expect("insert new data into youtube feed");
+                    // Drop the connection guard before taking yt_data.write()
+                    // (handler may hold yt_data.read() while waiting for the
+                    // connection — holding both here deadlocks the server).
+                    {
+                        let connection = connection.lock().await;
+                        venox_db::insert_youtube_feed(&connection, &response)
+                            .expect("insert new data into youtube feed");
+                    }
 
                     let mut yt_data = yt_data.write().await;
                     yt_data.insert(account_id, response);
@@ -68,9 +77,11 @@ async fn main() -> std::io::Result<()> {
             if let Ok(response) =
                 SoundcloudFeed::get_content_from_id(VENOX_SOUNDCLOUD_ID, &client).await
             {
-                let connection = connection.lock().await;
-                venox_db::insert_soundcloud_feed(&connection, &response)
-                    .expect("insert new data into soundcloud database");
+                {
+                    let connection = connection.lock().await;
+                    venox_db::insert_soundcloud_feed(&connection, &response)
+                        .expect("insert new data into soundcloud database");
+                }
                 let mut sc_data = sc_data.write().await;
                 sc_data.replace(response);
             }
@@ -91,11 +102,16 @@ async fn main() -> std::io::Result<()> {
 
 #[get("/youtube_videos")]
 async fn venox_accounts(data: web::Data<AppState>) -> Result<impl Responder, Error> {
-    let yt_data = data.yt_data.read().await;
-    if !yt_data.is_empty() {
-        return Ok(web::Json(serde_json::to_value(
-            &*yt_data.values().collect::<Vec<&YoutubeFeed>>(),
-        )?));
+    // Scope the read guard: never hold it while acquiring the connection
+    // mutex below, or we deadlock against the refresh loop (which holds the
+    // connection while taking yt_data.write()).
+    {
+        let yt_data = data.yt_data.read().await;
+        if !yt_data.is_empty() {
+            return Ok(web::Json(serde_json::to_value(
+                &*yt_data.values().collect::<Vec<&YoutubeFeed>>(),
+            )?));
+        }
     }
 
     let connection = data.connection.lock().await;

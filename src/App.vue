@@ -6,6 +6,8 @@ import FeaturedVideo from "./components/main/FeaturedVideo.vue"
 import VideoGrid from "./components/main/VideoGrid.vue"
 import MusicSection from "./components/main/MusicSection.vue"
 import ShopSection from "./components/main/ShopSection.vue"
+import MerchSection from "./components/main/MerchSection.vue"
+import SideMerchDock from "./components/main/SideMerchDock.vue"
 import TeamSection from "./components/main/TeamSection.vue"
 const featuredVideo = ref<any>(null)
 const featuredVideoError = ref<string | null>(null)
@@ -66,8 +68,12 @@ onMounted(async () => {
 
 <template>
   <VenoxHeader />
+  <SideMerchDock />
   <main class="main-content">
-    <ShopSection />
+    <div class="shop-row">
+      <ShopSection />
+      <MerchSection />
+    </div>
     <HomeHero />
     <FeaturedVideo
       :video="featuredVideo"
@@ -98,7 +104,7 @@ onMounted(async () => {
         <a href="https://www.instagram.com/lilvenoxmc/" class="social-link" target="_blank" rel="noopener" title="Instagram">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" width="28" height="28" />
         </a>
-        <a href="https://discord.gg/hew9GxbbQU" class="social-link" target="_blank" rel="noopener" title="Discord">
+        <a href="https://discord.gg/DqSTjtcqCN" class="social-link" target="_blank" rel="noopener" title="Discord">
           <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/discord.svg" alt="Discord" width="28" height="28" />
         </a>
         <a href="https://www.youtube.com/@venoxart" class="social-link" target="_blank" rel="noopener" title="YouTube">
@@ -116,3 +122,35 @@ onMounted(async () => {
     </div>
   </footer>
 </template>
+
+<style>
+/* Plush (Venoxmeow) and merch store side by side */
+.shop-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: stretch;
+  margin: 0 0 2.5rem;
+}
+.shop-row > section.shop-feature,
+.shop-row > section.merch-feature {
+  margin: 0;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+.shop-row .shop-art,
+.shop-row .merch-art {
+  min-height: 300px;
+  max-height: 430px;
+}
+.shop-row .merch-art img {
+  max-height: 300px;
+  width: auto;
+  max-width: 78%;
+}
+@media (max-width: 1080px) {
+  .shop-row {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

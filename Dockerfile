@@ -1,19 +1,13 @@
-FROM oven/bun:1.3.14 AS builder
+# oven/bun:1.3.14 segfaults on this kernel (SIGTRAP/139 at `bun run build`),
+# so the frontend is built on the host with `npx vite build` instead.
+# Run that BEFORE `docker compose build frontend`.
+FROM alpine:3.20 AS builder
 
-RUN apt-get update && apt-get install -y --no-install-recommends procps && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-# Dependencies first so bun install is cached unless the lockfile changes
-COPY package.json bun.lock ./
-RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
-
-COPY . .
-RUN bun run build
+COPY dist /dist
 
 FROM nginx:stable-alpine
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /dist /usr/share/nginx/html
 
 COPY frontend.nginx.conf /etc/nginx/conf.d/default.conf
 
