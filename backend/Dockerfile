@@ -15,7 +15,8 @@ COPY . .
 RUN cargo build --release --bin backend
 
 FROM debian:bookworm-slim AS runtime
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+# libsqlite3-0: rusqlite links the system sqlite, absent from slim images
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libsqlite3-0 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=builder /app/target/release/backend /app/backend
 CMD ["/app/backend"]
