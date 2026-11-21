@@ -9,7 +9,7 @@
       aria-label="Venoxmeow plush on Plushshop (opens in a new tab)"
     >
       <img
-        src="https://www.plushshop.com/cdn/shop/files/venoxmeow-pre-order-ship-by-nov-15-dec-wan-ou-375.webp?v=1791303447&width=400"
+        :src="plushImg"
         alt="Venoxmeow plush"
         loading="lazy"
       />
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue"
 import shirtBack from "../../assets/images/venox-shirt-back.png"
+import plushImg from "../../assets/images/venoxmeow-plush.jpg"
 
 const active = ref(false)
 let observer: IntersectionObserver | null = null
